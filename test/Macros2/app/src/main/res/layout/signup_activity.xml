@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/back_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="backImage"
+                android:padding="@dimen/sixteen_dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_arrow_back_white_24dp" />
+
+            <ImageView
+                android:id="@+id/friend_photo"
+                android:layout_width="@dimen/ninety_dp"
+                android:layout_height="@dimen/ninety_dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/eight_dp"
+                android:layout_marginTop="@dimen/sixteen_dp"
+                android:layout_marginEnd="@dimen/eight_dp"
+                android:onClick="profileImageHandler"
+                app:srcCompat="@drawable/ic_person_white_24dp" />
+
+            <EditText
+                android:id="@+id/name_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/forty_eight_dp"
+                android:layout_marginTop="@dimen/forty_eight_dp"
+                android:layout_marginEnd="@dimen/forty_eight_dp"
+                android:background="@drawable/input_underline"
+                android:ems="10"
+                android:hint="@string/fname"
+                android:inputType="textPersonName"
+                android:paddingBottom="@dimen/ten_dp"
+                android:textColor="@color/white"
+                android:textColorHint="@color/grey"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/email_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/forty_eight_dp"
+                android:layout_marginTop="@dimen/forty_eight_dp"
+                android:layout_marginEnd="@dimen/forty_eight_dp"
+                android:background="@drawable/input_underline"
+                android:ems="10"
+                android:hint="@string/email"
+                android:inputType="textPersonName"
+                android:paddingBottom="@dimen/ten_dp"
+                android:textColor="@color/white"
+                android:textColorHint="@color/grey"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/password_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/forty_eight_dp"
+                android:layout_marginTop="@dimen/forty_eight_dp"
+                android:layout_marginEnd="@dimen/forty_eight_dp"
+                android:background="@drawable/input_underline"
+                android:ems="10"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:paddingBottom="@dimen/ten_dp"
+                android:textColor="@color/white"
+                android:textColorHint="@color/grey"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/confpass_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/forty_eight_dp"
+                android:layout_marginTop="@dimen/forty_eight_dp"
+                android:layout_marginEnd="@dimen/forty_eight_dp"
+                android:background="@drawable/input_underline"
+                android:ems="10"
+                android:hint="@string/confpassword"
+                android:inputType="textPassword"
+                android:paddingBottom="@dimen/ten_dp"
+                android:textColor="@color/white"
+                android:textColorHint="@color/grey"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/getstarted_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/sixty_four_dp"
+                android:layout_marginTop="@dimen/sixty_four_dp"
+                android:layout_marginEnd="@dimen/sixty_four_dp"
+                android:background="@drawable/button_border"
+                android:onClick="handleGetStarted"
+                android:text="@string/getstarted"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/alreadymemb_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/forty_eight_dp"
+                android:layout_marginBottom="@dimen/forty_eight_dp"
+                android:gravity="center"
+                android:onClick="handleAlreadyMember"
+                android:padding="@dimen/eight_dp"
+                android:text="@string/member"
+                android:textColor="@color/light_blue" />
+        </LinearLayout>
+    </ScrollView>
+
+</android.support.constraint.ConstraintLayout>

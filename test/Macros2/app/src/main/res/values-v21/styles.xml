@@ -1,0 +1,13 @@
+<resources>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="progressBars" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorAccent">@color/light_blue</item>
+        <item name="android:progressBackgroundTint">@color/light_blue</item>
+    </style>
+</resources>

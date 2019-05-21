@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start">
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/zero_dp">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@android:color/transparent"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+        </android.support.design.widget.AppBarLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background_black">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/side_nav_bar">
+
+                <ImageView
+                    android:id="@+id/back_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="backImageHandler"
+                    android:padding="@dimen/sixteen_dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_arrow_back_white_24dp" />
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/circularCard"
+                    android:layout_width="@dimen/one_hundred_dp"
+                    android:layout_height="@dimen/one_hundred_dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/eight_dp"
+                    android:layout_marginTop="@dimen/sixteen_dp"
+                    android:layout_marginEnd="@dimen/eight_dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="@dimen/fifty_dp"
+                    app:cardElevation="@dimen/four_dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/back_image">
+
+                    <ImageView
+                        android:id="@+id/friend_photo"
+                        android:layout_width="@dimen/eighty_dp"
+                        android:layout_height="@dimen/eighty_dp"
+                        android:layout_gravity="center"
+                        android:onClick="profileImageHandler"
+                        app:srcCompat="@drawable/ic_person_black_24dp" />
+                </android.support.v7.widget.CardView>
+
+                <TextView
+                    android:id="@+id/user_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/sixteen_dp"
+                    android:layout_marginTop="@dimen/sixteen_dp"
+                    android:layout_marginEnd="@dimen/sixteen_dp"
+                    android:layout_marginBottom="@dimen/sixteen_dp"
+                    android:gravity="center"
+                    android:text="@string/author"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/circularCard" />
+            </android.support.constraint.ConstraintLayout>
+
+            <RadioGroup
+                android:id="@+id/radioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/one_dp"
+                android:background="@drawable/input_underline_blue"
+                android:checkedButton="@id/targetRadio"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/targetRadio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/radio_button_states"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:onClick="radioHandler"
+                    android:padding="@dimen/eight_dp"
+                    android:tag="@string/target"
+                    android:text="@string/target"
+                    android:textColor="@color/white" />
+
+                <RadioButton
+                    android:id="@+id/overviewRadio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/radio_button_states"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:onClick="radioHandler"
+                    android:padding="@dimen/eight_dp"
+                    android:tag="@string/overview"
+                    android:text="@string/overview"
+                    android:textColor="@color/white" />
+            </RadioGroup>
+        </LinearLayout>
+    </ScrollView>
+    </android.support.constraint.ConstraintLayout>
+    </android.support.design.widget.CoordinatorLayout>
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="250dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/card_grey"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header_main"
+        app:itemIconTint="@color/white"
+        app:itemTextColor="@color/light_blue"
+        app:menu="@menu/activity_main_drawer" />
+</android.support.v4.widget.DrawerLayout>

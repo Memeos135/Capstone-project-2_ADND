@@ -1,0 +1,97 @@
+package com.example.macros;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CalendarView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+
+public class MainActivityFragment extends Fragment {
+
+    public MainActivityFragment(){}
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.main_activity_fragment, container, false);
+        setupRecycler(view);
+
+        CalendarView calendarView = (CalendarView) view.findViewById(R.id.calendarView);
+        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(CalendarView calendarView, int i, int i1, int i2) {
+                // i > year
+                // i1 > month
+                // i2 > day
+                startActivity(new Intent(getContext(), MacrosActivity.class)
+                .putExtra("day", i2)
+                .putExtra("month", i1)
+                .putExtra("year", i));
+            }
+        });
+
+        return view;
+    }
+
+    public void setupRecycler(View view){
+
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        setupRecyclerData(recyclerView);
+    }
+
+    public void setupRecyclerData(RecyclerView recyclerView){
+        ArrayList<NotesSetter> notesList = new ArrayList<>();
+        readNotes(notesList, recyclerView);
+    }
+
+    public void readNotes(final ArrayList<NotesSetter> notesList, final RecyclerView recyclerView){
+        final int month = Calendar.getInstance().get(Calendar.MONTH);
+        final int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+        final int year = Calendar.getInstance().get(Calendar.YEAR);
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child("currentMacrosProgress").child(String.valueOf(year)).child(String.valueOf(month+1)).child(String.valueOf(day)).child("notes");
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                        notesList.add(new NotesSetter(getMonth(month), String.valueOf(day), dataSnapshot1.getValue().toString(), String.valueOf(year)));
+                    }
+                    NotesRecyclerAdapter notesRecyclerAdapter = new NotesRecyclerAdapter(getContext(), notesList);
+                    recyclerView.setAdapter(notesRecyclerAdapter);
+                    ;
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public String getMonth(int value){
+        String[] months = {"JAN", "FEB", "MAR", "APRIL", "MAY", "JUNE", "JULY", "AUG", "SEPT", "OCT", "NOV", "DEC"};
+
+        return months[value];
+    }
+}

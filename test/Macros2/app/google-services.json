@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "698219417311",
+    "firebase_url": "https://macrosudacity.firebaseio.com",
+    "project_id": "macrosudacity",
+    "storage_bucket": "macrosudacity.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:698219417311:android:9dc251b0ab17f35e",
+        "android_client_info": {
+          "package_name": "com.example.macros"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "698219417311-dah9ucqus61s84ku63u480jdnq8ak37t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAIByuWci9Bv4PABfgFxWbD4PZOb64LGY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "698219417311-dah9ucqus61s84ku63u480jdnq8ak37t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/eight_dp"
+    android:layout_marginEnd="@dimen/eight_dp"
+    android:layout_marginBottom="@dimen/eight_dp"
+    app:cardBackgroundColor="@color/card_grey"
+    app:cardCornerRadius="@dimen/four_dp">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/friend_photo"
+            android:layout_width="@dimen/fifty_dp"
+            android:layout_height="@dimen/fifty_dp"
+            android:padding="@dimen/eight_dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_person_white_24dp" />
+
+        <TextView
+            android:id="@+id/dump"
+            android:layout_width="@dimen/one_dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/eight_dp"
+            android:background="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/friend_name"
+            app:layout_constraintStart_toEndOf="@+id/friend_photo"
+            app:layout_constraintTop_toTopOf="@+id/friend_name" />
+
+        <TextView
+            android:id="@+id/friend_name"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/sixteen_dp"
+            android:layout_marginTop="@dimen/eight_dp"
+            android:layout_marginEnd="@dimen/eight_dp"
+            android:layout_marginBottom="@dimen/eight_dp"
+            android:gravity="center_vertical"
+            android:text="@string/author"
+            android:textColor="@color/light_blue"
+            app:layout_constraintBottom_toBottomOf="@+id/friend_photo"
+            app:layout_constraintEnd_toStartOf="@+id/drop_down_list"
+            app:layout_constraintStart_toEndOf="@+id/dump"
+            app:layout_constraintTop_toTopOf="@+id/friend_photo" />
+
+        <ImageView
+            android:id="@+id/drop_down_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/eight_dp"
+            android:padding="@dimen/eight_dp"
+            app:layout_constraintBottom_toBottomOf="@+id/friend_photo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/friend_name"
+            app:srcCompat="@drawable/ic_arrow_drop_down_white_24dp" />
+
+        <LinearLayout
+            android:id="@+id/spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/eight_dp"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/drop_down_list"
+            app:layout_constraintTop_toBottomOf="@+id/friend_name">
+
+            <TextView
+                android:id="@+id/remove_friend"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/eight_dp"
+                android:text="@string/remove_friend" />
+        </LinearLayout>
+
+    </android.support.constraint.ConstraintLayout>
+</android.support.v7.widget.CardView>

@@ -1,0 +1,194 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    android:orientation="horizontal"
+    android:padding="@dimen/widget_margin"
+    android:weightSum="1">
+
+    <LinearLayout
+        android:id="@+id/protein"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="@dimen/thirty_two_dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView19"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:shadowColor="@color/background_black"
+            android:shadowDx="@dimen/two"
+            android:shadowDy="@dimen/two"
+            android:shadowRadius="@dimen/one"
+            android:text="@string/P"
+            android:textColor="@color/colorAccent"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/textView20"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:shadowColor="@color/background_black"
+            android:shadowDx="@dimen/two"
+            android:shadowDy="@dimen/two"
+            android:shadowRadius="@dimen/one"
+            android:text="@string/protein_goal"
+            android:textColor="@color/light_grey"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/textView21"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/input_underline_blue"
+            android:shadowColor="@color/background_black"
+            android:shadowDx="@dimen/two"
+            android:shadowDy="@dimen/two"
+            android:shadowRadius="@dimen/one"
+            android:text="@string/protein_current"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/carbs"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="32dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView22"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:shadowColor="@color/background_black"
+            android:shadowDx="@dimen/two"
+            android:shadowDy="@dimen/two"
+            android:shadowRadius="@dimen/one"
+            android:text="@string/C"
+            android:textColor="@android:color/holo_green_light"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/textView23"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:shadowColor="@color/background_black"
+            android:shadowDx="@dimen/two"
+            android:shadowDy="@dimen/two"
+            android:shadowRadius="@dimen/one"
+            android:text="@string/carbs_goal"
+            android:textColor="@color/light_grey"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/textView24"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/input_underline_blue"
+            android:shadowColor="@color/background_black"
+            android:shadowDx="@dimen/two"
+            android:shadowDy="@dimen/two"
+            android:shadowRadius="@dimen/one"
+            android:text="@string/carbs_current"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/fat"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="32dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView25"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:shadowColor="@color/background_black"
+            android:shadowDx="@dimen/two"
+            android:shadowDy="@dimen/two"
+            android:shadowRadius="@dimen/one"
+            android:text="@string/F"
+            android:textColor="@android:color/holo_orange_light"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/textView26"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:shadowColor="@color/background_black"
+            android:shadowDx="@dimen/two"
+            android:shadowDy="@dimen/two"
+            android:shadowRadius="@dimen/one"
+            android:text="@string/fats_goal"
+            android:textColor="@color/light_grey"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/textView27"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/input_underline_blue"
+            android:shadowColor="@color/background_black"
+            android:shadowDx="@dimen/two"
+            android:shadowDy="@dimen/two"
+            android:shadowRadius="@dimen/one"
+            android:text="@string/fats_current"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView30"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:shadowColor="@color/background_black"
+            android:shadowDx="@dimen/two"
+            android:shadowDy="@dimen/two"
+            android:shadowRadius="@dimen/one"
+            android:text="@string/CAL"
+            android:textColor="@color/light_blue"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/textView31"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:shadowColor="@color/background_black"
+            android:shadowDx="@dimen/two"
+            android:shadowDy="@dimen/two"
+            android:shadowRadius="@dimen/one"
+            android:text="@string/temp_calorie"
+            android:textColor="@color/light_grey"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/textView32"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/input_underline_blue"
+            android:shadowColor="@color/background_black"
+            android:shadowDx="@dimen/two"
+            android:shadowDy="@dimen/two"
+            android:shadowRadius="@dimen/one"
+            android:text="@string/current_cal"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </LinearLayout>
+</LinearLayout>

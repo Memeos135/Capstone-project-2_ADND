@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/background_black"
+    android:paddingBottom="@dimen/twenty_four_dp">
+
+        <EditText
+            android:id="@+id/fat_prog_input"
+            android:layout_width="@dimen/fifty_dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/sixteen_dp"
+            android:layout_marginEnd="@dimen/forty_eight_dp"
+            android:background="@drawable/input_underline_blue"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:paddingBottom="@dimen/eight_dp"
+            android:textAlignment="center"
+            android:textColor="@color/light_blue"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/protein" />
+
+        <EditText
+            android:id="@+id/carb_prog_input"
+            android:layout_width="@dimen/fifty_dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/sixteen_dp"
+            android:background="@drawable/input_underline_blue"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:paddingBottom="@dimen/eight_dp"
+            android:textAlignment="center"
+            android:textColor="@color/light_blue"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@+id/carbs"
+            app:layout_constraintStart_toStartOf="@+id/carbs"
+            app:layout_constraintTop_toBottomOf="@+id/protein" />
+
+        <TextView
+            android:id="@+id/fat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/twenty_four_dp"
+            android:text="@string/F"
+            android:textColor="@android:color/holo_orange_light"
+            app:layout_constraintEnd_toEndOf="@+id/fat_prog_input"
+            app:layout_constraintStart_toStartOf="@+id/fat_prog_input"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/carbs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/C"
+            android:textColor="@android:color/holo_green_light"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/protein" />
+
+        <TextView
+            android:id="@+id/protein"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/twenty_four_dp"
+            android:text="@string/P"
+            android:textColor="@color/colorAccent"
+            app:layout_constraintEnd_toEndOf="@+id/protein_prog_input"
+            app:layout_constraintStart_toStartOf="@+id/protein_prog_input"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/fat_current"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/fat_target"
+            app:layout_constraintEnd_toEndOf="@+id/current_label"
+            app:layout_constraintTop_toTopOf="@+id/fat_target" />
+
+        <TextView
+            android:id="@+id/protein_current"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/protein_target"
+            app:layout_constraintEnd_toEndOf="@+id/current_label"
+            app:layout_constraintTop_toTopOf="@+id/protein_target" />
+
+        <TextView
+            android:id="@+id/fat_percent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/forty_dp"
+            android:layout_marginBottom="@dimen/eight_dp"
+            android:textColor="@color/light_blue"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/fat_progress"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/fat_progress" />
+
+        <TextView
+            android:id="@+id/carbs_percent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/forty_dp"
+            android:textColor="@color/light_blue"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/carbs_progress"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/carbs_progress" />
+
+        <TextView
+            android:id="@+id/protein_remain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/eight_dp"
+            android:textColor="@color/colorAccent"
+            app:layout_constraintBottom_toTopOf="@+id/protein_progress"
+            app:layout_constraintEnd_toEndOf="@+id/protein_progress"
+            app:layout_constraintTop_toTopOf="@+id/protein_label" />
+
+        <ProgressBar
+            android:id="@+id/fat_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/eight_dp"
+            android:layout_marginEnd="@dimen/sixteen_dp"
+            android:theme="@style/progressBars"
+            app:layout_constraintEnd_toStartOf="@+id/fat_percent"
+            app:layout_constraintStart_toStartOf="@+id/protein_label"
+            app:layout_constraintTop_toBottomOf="@+id/fat_label" />
+
+        <TextView
+            android:id="@+id/fat_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/forty_eight_dp"
+            android:text="@string/fat"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toStartOf="@+id/protein_label"
+            app:layout_constraintTop_toBottomOf="@+id/carbs_progress" />
+
+        <ProgressBar
+            android:id="@+id/carbs_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/eight_dp"
+            android:layout_marginEnd="@dimen/sixteen_dp"
+            android:theme="@style/progressBars"
+            app:layout_constraintEnd_toStartOf="@+id/carbs_percent"
+            app:layout_constraintStart_toStartOf="@+id/protein_label"
+            app:layout_constraintTop_toBottomOf="@+id/carbs_label" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="@dimen/one_hundred_dp"
+            android:layout_height="@dimen/one_hundred_dp"
+            android:layout_marginStart="@dimen/eight_dp"
+            android:layout_marginTop="@dimen/forty_eight_dp"
+            android:layout_marginEnd="@dimen/eight_dp"
+            android:background="@drawable/circular_shape"
+            android:indeterminate="false"
+            android:max="100"
+            android:progress="55"
+            android:progressDrawable="@drawable/circular_progress_bar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/carb_prog_input" />
+
+        <TextView
+            android:id="@+id/calorie_value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/sixteen_dp"
+            android:layout_marginEnd="@dimen/sixteen_dp"
+            android:layout_marginBottom="@dimen/sixteen_dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/progressBar"
+            app:layout_constraintEnd_toEndOf="@+id/progressBar"
+            app:layout_constraintStart_toStartOf="@+id/progressBar"
+            app:layout_constraintTop_toTopOf="@+id/progressBar" />
+
+        <TextView
+            android:id="@+id/calorie_percent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/eight_dp"
+            android:layout_marginEnd="@dimen/eight_dp"
+            android:gravity="center"
+            android:textColor="@color/light_blue"
+            app:layout_constraintEnd_toEndOf="@+id/calorie_value"
+            app:layout_constraintStart_toStartOf="@+id/calorie_value"
+            app:layout_constraintTop_toBottomOf="@+id/calorie_value" />
+
+        <ProgressBar
+            android:id="@+id/protein_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/eight_dp"
+            android:layout_marginEnd="@dimen/sixteen_dp"
+            android:theme="@style/progressBars"
+            app:layout_constraintEnd_toStartOf="@+id/protein_percent"
+            app:layout_constraintStart_toStartOf="@+id/protein_label"
+            app:layout_constraintTop_toBottomOf="@+id/protein_label" />
+
+        <TextView
+            android:id="@+id/protein_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/forty_eight_dp"
+            android:layout_marginTop="@dimen/forty_eight_dp"
+            android:text="@string/protein"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/progressBar" />
+
+        <TextView
+            android:id="@+id/carbs_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/forty_eight_dp"
+            android:text="@string/carbs"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toStartOf="@+id/protein_label"
+            app:layout_constraintTop_toBottomOf="@+id/protein_progress" />
+
+        <TextView
+            android:id="@+id/protein_percent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/forty_dp"
+            android:textColor="@color/light_blue"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/protein_progress"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/protein_progress" />
+
+        <TextView
+            android:id="@+id/carbs_remain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorAccent"
+            app:layout_constraintEnd_toEndOf="@+id/carbs_progress"
+            app:layout_constraintTop_toTopOf="@+id/carbs_label" />
+
+        <TextView
+            android:id="@+id/fat_remain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorAccent"
+            app:layout_constraintEnd_toEndOf="@+id/fat_progress"
+            app:layout_constraintTop_toTopOf="@+id/fat_label" />
+
+        <TextView
+            android:id="@+id/calorie_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/calories"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/progressBar"
+            app:layout_constraintStart_toStartOf="@+id/protein_label"
+            app:layout_constraintTop_toTopOf="@+id/progressBar" />
+
+        <TextView
+            android:id="@+id/carbohydrates"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/twenty_four_dp"
+            android:text="@string/carbs"
+            android:textColor="@color/darker_light_blue"
+            app:layout_constraintStart_toStartOf="@+id/fat_progress"
+            app:layout_constraintTop_toBottomOf="@+id/target_label" />
+
+        <TextView
+            android:id="@+id/proteins"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/twenty_four_dp"
+            android:text="@string/protein"
+            android:textColor="@color/darker_light_blue"
+            app:layout_constraintStart_toStartOf="@+id/carbohydrates"
+            app:layout_constraintTop_toBottomOf="@+id/carbohydrates" />
+
+        <TextView
+            android:id="@+id/fats"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/twenty_four_dp"
+            android:text="@string/fats"
+            android:textColor="@color/darker_light_blue"
+            app:layout_constraintStart_toStartOf="@+id/proteins"
+            app:layout_constraintTop_toBottomOf="@+id/proteins" />
+
+        <TextView
+            android:id="@+id/carbs_target"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="targetHandler"
+            android:padding="@dimen/eight_dp"
+            android:tag="carb_target"
+            android:textColor="@color/light_grey"
+            app:layout_constraintBottom_toBottomOf="@+id/carbohydrates"
+            app:layout_constraintEnd_toEndOf="@+id/fat_percent"
+            app:layout_constraintTop_toTopOf="@+id/carbohydrates" />
+
+        <TextView
+            android:id="@+id/protein_target"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="targetHandler"
+            android:padding="@dimen/eight_dp"
+            android:tag="protein_target"
+            android:textColor="@color/light_grey"
+            app:layout_constraintBottom_toBottomOf="@+id/proteins"
+            app:layout_constraintEnd_toEndOf="@+id/carbs_target"
+            app:layout_constraintTop_toTopOf="@+id/proteins" />
+
+        <TextView
+            android:id="@+id/fat_target"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="targetHandler"
+            android:padding="@dimen/eight_dp"
+            android:tag="fat_target"
+            android:textColor="@color/light_grey"
+            app:layout_constraintBottom_toBottomOf="@+id/fats"
+            app:layout_constraintEnd_toEndOf="@+id/protein_target"
+            app:layout_constraintTop_toTopOf="@+id/fats" />
+
+        <TextView
+            android:id="@+id/target_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/target"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="@+id/fat_percent"
+            app:layout_constraintTop_toBottomOf="@+id/target_values_label" />
+
+        <TextView
+            android:id="@+id/current_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/twenty_four_dp"
+            android:text="@string/cu"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toStartOf="@+id/target_label"
+            app:layout_constraintTop_toTopOf="@+id/target_label" />
+
+        <TextView
+            android:id="@+id/carbs_current"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/carbs_target"
+            app:layout_constraintEnd_toEndOf="@+id/current_label"
+            app:layout_constraintTop_toTopOf="@+id/carbs_target" />
+
+        <TextView
+            android:id="@+id/target_values_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/sixty_four_dp"
+            android:text="@string/tar_values"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@+id/fat_progress"
+            app:layout_constraintTop_toBottomOf="@+id/fat_progress" />
+
+        <EditText
+            android:id="@+id/protein_prog_input"
+            android:layout_width="@dimen/fifty_dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/forty_eight_dp"
+            android:layout_marginTop="@dimen/sixteen_dp"
+            android:background="@drawable/input_underline_blue"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:paddingBottom="@dimen/eight_dp"
+            android:textAlignment="center"
+            android:textColor="@color/light_blue"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/protein" />
+
+</android.support.constraint.ConstraintLayout>

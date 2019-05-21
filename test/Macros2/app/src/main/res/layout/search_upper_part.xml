@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/back_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="backImageHandler"
+        android:padding="@dimen/sixteen_dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_arrow_back_white_24dp" />
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/circularCard"
+        android:layout_width="@dimen/ninety_dp"
+        android:layout_height="@dimen/one_hundred_dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="@dimen/eight_dp"
+        android:layout_marginTop="@dimen/sixteen_dp"
+        android:layout_marginEnd="@dimen/eight_dp"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="@dimen/fifty_dp"
+        app:cardElevation="@dimen/four_dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/back_image">
+
+        <ImageView
+            android:id="@+id/friend_photo"
+            android:layout_width="@dimen/eighty_dp"
+            android:layout_height="@dimen/eighty_dp"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/ic_person_black_24dp" />
+
+    </android.support.v7.widget.CardView>
+
+    <TextView
+        android:id="@+id/user_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/sixteen_dp"
+        android:layout_marginTop="@dimen/sixteen_dp"
+        android:layout_marginEnd="@dimen/sixteen_dp"
+        android:gravity="center"
+        android:text="@string/author"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/circularCard" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/eighty_dp"
+        android:layout_marginTop="@dimen/twenty_dp"
+        android:background="@drawable/side_nav_bar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/frameLayout">
+
+        <TextView
+            android:id="@+id/followers_val"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/eight_dp"
+            android:text="@string/temp_calorie"
+            android:textColor="@color/colorAccent"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toTopOf="@+id/following_label"
+            app:layout_constraintEnd_toEndOf="@+id/followers_label"
+            app:layout_constraintStart_toStartOf="@+id/followers_label" />
+
+        <TextView
+            android:id="@+id/followers_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/sixty_four_dp"
+            android:shadowDx="@dimen/minus_two_dp"
+            android:shadowDy="@dimen/minus_two_dp"
+            android:shadowRadius="@dimen/one"
+            android:text="@string/followers"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/following_label"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/following_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/sixty_four_dp"
+            android:layout_marginBottom="@dimen/twelve_dp"
+            android:shadowDx="@dimen/minus_two_dp"
+            android:shadowDy="@dimen/minus_two_dp"
+            android:shadowRadius="@dimen/one"
+            android:text="@string/following"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/following_val"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/eight_dp"
+            android:text="@string/temp_carbs"
+            android:textColor="@color/colorAccent"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toTopOf="@+id/following_label"
+            app:layout_constraintEnd_toEndOf="@+id/following_label"
+            app:layout_constraintStart_toStartOf="@+id/following_label" />
+    </android.support.constraint.ConstraintLayout>
+
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/eight_dp"
+        android:layout_marginTop="@dimen/twenty_four_dp"
+        android:layout_marginEnd="@dimen/eight_dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/user_name">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:cardBackgroundColor="@color/background_black">
+
+            <Button
+                android:id="@+id/add_button"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/forty_dp"
+                android:background="@drawable/button_border"
+                android:onClick="handleButton"
+                android:paddingStart="@dimen/eight_dp"
+                android:paddingEnd="@dimen/eight_dp"
+                android:text="@string/add"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/user_name" />
+        </android.support.v7.widget.CardView>
+
+    </FrameLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/chat_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/eight_dp"
+        android:layout_marginEnd="@dimen/eight_dp"
+        android:clickable="true"
+        android:onClick="chatFabHandler"
+        app:backgroundTint="@color/card_grey"
+        app:elevation="@dimen/fab_elevation"
+        app:layout_constraintBottom_toBottomOf="@+id/circularCard"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/circularCard"
+        app:layout_constraintTop_toTopOf="@+id/circularCard"
+        app:srcCompat="@drawable/ic_chat_bubble_blue_24dp" />
+
+</android.support.constraint.ConstraintLayout>
