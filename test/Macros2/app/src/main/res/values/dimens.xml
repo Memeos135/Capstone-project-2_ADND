@@ -34,6 +34,7 @@
     <dimen name="fifteen_dp">15dp</dimen>
     <dimen name="one">1</dimen>
     <dimen name="two">2</dimen>
+    <dimen name="two_hundred_twenty_dp">220dp</dimen>
 
     <!--
 Refer to App Widget Documentation for margin information

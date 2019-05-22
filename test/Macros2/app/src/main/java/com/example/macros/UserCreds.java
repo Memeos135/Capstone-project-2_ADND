@@ -4,6 +4,7 @@ public class UserCreds {
     private String email;
     private String password;
     private String profile_picture;
+    private String name;
 
     public String getEmail() {
         return email;
@@ -32,9 +33,18 @@ public class UserCreds {
     public UserCreds() {
     }
 
-    public UserCreds(String email, String password, String profile_picture) {
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public UserCreds(String email, String password, String profile_picture, String name) {
         this.email = email;
         this.password = password;
         this.profile_picture = profile_picture;
+        this.name = name;
     }
 }

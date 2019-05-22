@@ -226,7 +226,7 @@ public class SignupActivity extends AppCompatActivity implements NavigationView.
     public void storeUserRecord(String uID, final Uri downloadUri){
         DatabaseReference tempRef = FirebaseDatabase.getInstance().getReference().child("users").child(uID);
 
-        tempRef.setValue(new UserProfileRecord(new UserCreds(email, password, downloadUri.toString()), new UserGoalMacros(protein, carbs, fats))).addOnSuccessListener(new OnSuccessListener<Void>() {
+        tempRef.setValue(new UserProfileRecord(new UserCreds(email, password, downloadUri.toString(), fName), new UserGoalMacros(protein, carbs, fats))).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 startActivity(new Intent(getApplicationContext(), LoginActivity.class)
@@ -255,7 +255,7 @@ public class SignupActivity extends AppCompatActivity implements NavigationView.
         if(requestCode == 1 && data != null){
             // Load image
             selectedImage = data.getData();
-            Picasso.get().load(selectedImage).noPlaceholder().centerCrop().fit().into((ImageView) findViewById(R.id.friend_photo));
+            Picasso.get().load(selectedImage).noPlaceholder().centerCrop().fit().into((ImageView) findViewById(R.id.send_image));
         }
     }
 

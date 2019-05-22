@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -88,6 +89,8 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
             navigationView.getMenu().clear();
             navigationView.inflateMenu(R.menu.activity_main_drawer);
 
+            resetNav();
+
         } else if (id == R.id.home) {
 
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
@@ -136,5 +139,15 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
             navigationView.getMenu().clear();
             navigationView.inflateMenu(R.menu.activity_main_drawer);
         }
+    }
+
+    public void resetNav(){
+        TextView name = findViewById(R.id.user_name);
+        TextView email = findViewById(R.id.user_email);
+        ImageView photo = findViewById(R.id.send_image);
+
+        name.setText(R.string.user_name);
+        email.setText(R.string.example_email);
+        photo.setImageResource(R.drawable.ic_person_black_24dp);
     }
 }

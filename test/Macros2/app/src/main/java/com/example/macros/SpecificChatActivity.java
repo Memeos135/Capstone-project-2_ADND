@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -84,6 +85,8 @@ public class SpecificChatActivity extends AppCompatActivity implements Navigatio
             navigationView.getMenu().clear();
             navigationView.inflateMenu(R.menu.activity_main_drawer);
 
+            resetNav();
+
         } else if (id == R.id.home) {
 
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
@@ -153,5 +156,15 @@ public class SpecificChatActivity extends AppCompatActivity implements Navigatio
             navigationView.getMenu().clear();
             navigationView.inflateMenu(R.menu.activity_main_drawer);
         }
+    }
+
+    public void resetNav(){
+        TextView name = findViewById(R.id.user_name);
+        TextView email = findViewById(R.id.user_email);
+        ImageView photo = findViewById(R.id.send_image);
+
+        name.setText(R.string.user_name);
+        email.setText(R.string.example_email);
+        photo.setImageResource(R.drawable.ic_person_black_24dp);
     }
 }

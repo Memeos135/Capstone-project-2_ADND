@@ -14,12 +14,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,11 +54,6 @@ public class MacrosActivity extends AppCompatActivity implements NavigationView.
 
         context = this;
 
-        setupDate();
-        setupNotesRecycler();
-        setupMacroInputListener();
-        setupTargetTexts();
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -71,6 +68,11 @@ public class MacrosActivity extends AppCompatActivity implements NavigationView.
         if(FirebaseAuth.getInstance().getCurrentUser()!=null){
             navigationView.getMenu().clear();
             navigationView.inflateMenu(R.menu.logged_drawer);
+
+            setupDate();
+            setupNotesRecycler();
+            setupMacroInputListener();
+            setupTargetTexts();
         }
     }
 
@@ -88,6 +90,10 @@ public class MacrosActivity extends AppCompatActivity implements NavigationView.
 
         calorie_val.setText(String.valueOf(max_calories));
         calorie_percent.setText((int)percentage+"%");
+
+        ProgressBar cal_prog = findViewById(R.id.progressBar);
+        cal_prog.setProgress((int)percentage);
+
 
     }
 
@@ -275,6 +281,8 @@ public class MacrosActivity extends AppCompatActivity implements NavigationView.
             NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
             navigationView.getMenu().clear();
             navigationView.inflateMenu(R.menu.activity_main_drawer);
+
+            resetNav();
 
         } else if (id == R.id.home) {
 
@@ -557,12 +565,41 @@ public class MacrosActivity extends AppCompatActivity implements NavigationView.
                             }
                         }
                     });
+                }else{
+
+                    if(category.equals("protein")){
+                        DumpClass dumpClass = new DumpClass(value.getText().toString(), "0", "0", "");
+                        callDefault(dumpClass, value);
+                    }else if(category.equals("carbs")){
+                        DumpClass dumpClass = new DumpClass("0", value.getText().toString(), "0", "");
+                        callDefault(dumpClass, value);
+                    }else{
+                        DumpClass dumpClass = new DumpClass("0", "0", value.getText().toString(), "");
+                        callDefault(dumpClass, value);
+                    }
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
+            }
+        });
+    }
+
+    public void callDefault(DumpClass dumpClass, final EditText value){
+        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("currentMacrosProgress")
+                .child(year).child(month).child(day);
+
+        databaseReference.setValue(dumpClass).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    value.setText("");
+                } else {
+                    Toast.makeText(context, "Failed to add macro", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -580,5 +617,15 @@ public class MacrosActivity extends AppCompatActivity implements NavigationView.
             navigationView.getMenu().clear();
             navigationView.inflateMenu(R.menu.activity_main_drawer);
         }
+    }
+
+    public void resetNav(){
+        TextView name = findViewById(R.id.user_name);
+        TextView email = findViewById(R.id.user_email);
+        ImageView photo = findViewById(R.id.send_image);
+
+        name.setText(R.string.user_name);
+        email.setText(R.string.example_email);
+        photo.setImageResource(R.drawable.ic_person_black_24dp);
     }
 }

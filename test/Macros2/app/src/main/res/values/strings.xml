@@ -62,5 +62,6 @@
     <string name="CAL">CAL</string>
     <string name="time">11:59PM</string>
     <string name="remain">Remaining</string>
+    <string name="user_name">User Name</string>
 
 </resources>

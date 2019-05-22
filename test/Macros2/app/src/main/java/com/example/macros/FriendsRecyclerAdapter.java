@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -59,7 +58,7 @@ public class FriendsRecyclerAdapter extends RecyclerView.Adapter<FriendsRecycler
             super(itemView);
 
             name = itemView.findViewById(R.id.friend_name);
-            photo = itemView.findViewById(R.id.friend_photo);
+            photo = itemView.findViewById(R.id.send_image);
             last_message = itemView.findViewById(R.id.last_msg_value);
             last_seen = itemView.findViewById(R.id.last_seen);
             container = itemView.findViewById(R.id.container);

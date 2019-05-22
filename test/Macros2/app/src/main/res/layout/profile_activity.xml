@@ -75,9 +75,9 @@
                     app:layout_constraintTop_toBottomOf="@+id/back_image">
 
                     <ImageView
-                        android:id="@+id/friend_photo"
-                        android:layout_width="@dimen/eighty_dp"
-                        android:layout_height="@dimen/eighty_dp"
+                        android:id="@+id/send_image"
+                        android:layout_width="@dimen/one_hundred_dp"
+                        android:layout_height="@dimen/one_hundred_dp"
                         android:layout_gravity="center"
                         android:onClick="profileImageHandler"
                         app:srcCompat="@drawable/ic_person_black_24dp" />

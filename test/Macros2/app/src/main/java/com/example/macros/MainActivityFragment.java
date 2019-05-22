@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,14 +21,20 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class MainActivityFragment extends Fragment {
+public class MainActivityFragment extends Fragment{
+
+    ArrayList<NotesSetter> notesList;
+    NotesRecyclerAdapter notesRecyclerAdapter;
 
     public MainActivityFragment(){}
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.main_activity_fragment, container, false);
-        setupRecycler(view);
+
+        if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+            setupRecycler(view);
+        }
 
         CalendarView calendarView = (CalendarView) view.findViewById(R.id.calendarView);
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
@@ -57,7 +62,7 @@ public class MainActivityFragment extends Fragment {
     }
 
     public void setupRecyclerData(RecyclerView recyclerView){
-        ArrayList<NotesSetter> notesList = new ArrayList<>();
+        notesList = new ArrayList<>();
         readNotes(notesList, recyclerView);
     }
 
@@ -76,9 +81,8 @@ public class MainActivityFragment extends Fragment {
                     for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                         notesList.add(new NotesSetter(getMonth(month), String.valueOf(day), dataSnapshot1.getValue().toString(), String.valueOf(year)));
                     }
-                    NotesRecyclerAdapter notesRecyclerAdapter = new NotesRecyclerAdapter(getContext(), notesList);
+                    notesRecyclerAdapter = new NotesRecyclerAdapter(getContext(), notesList);
                     recyclerView.setAdapter(notesRecyclerAdapter);
-                    ;
                 }
             }
 
@@ -93,5 +97,18 @@ public class MainActivityFragment extends Fragment {
         String[] months = {"JAN", "FEB", "MAR", "APRIL", "MAY", "JUNE", "JULY", "AUG", "SEPT", "OCT", "NOV", "DEC"};
 
         return months[value];
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(FirebaseAuth.getInstance().getCurrentUser()!=null) {
+            setupRecycler(getView());
+        }else{
+            if(notesList != null) {
+                notesList.clear();
+                notesRecyclerAdapter.notifyDataSetChanged();
+            }
+        }
     }
 }

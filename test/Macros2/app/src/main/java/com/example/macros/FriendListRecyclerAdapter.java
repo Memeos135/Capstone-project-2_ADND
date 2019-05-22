@@ -81,7 +81,7 @@ public class FriendListRecyclerAdapter extends RecyclerView.Adapter<FriendListRe
         public MyViewHolder( View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.friend_name);
-            photo = itemView.findViewById(R.id.friend_photo);
+            photo = itemView.findViewById(R.id.send_image);
             dropDown = itemView.findViewById(R.id.drop_down_list);
             spinner = itemView.findViewById(R.id.spinner);
             remove_friend = itemView.findViewById(R.id.remove_friend);

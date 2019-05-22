@@ -28,10 +28,12 @@ public class ProfileRecyclerAdapter extends RecyclerView.Adapter<ProfileRecycler
     @Override
     public void onBindViewHolder(MyViewHolder myViewHolder, int i) {
 //        myViewHolder.check.setVisibility(View.GONE);
-        myViewHolder.fats.setText(R.string.temp_fat);
-        myViewHolder.carbs.setText(R.string.temp_carbs);
-        myViewHolder.protein.setText(R.string.temp_protein);
-        myViewHolder.date.setText(R.string.temp_date);
+        myViewHolder.fats.setText(recordList.get(i).getFat());
+        myViewHolder.carbs.setText(recordList.get(i).getCarbs());
+        myViewHolder.protein.setText(recordList.get(i).getProtein());
+        myViewHolder.date.setText(recordList.get(i).getDate());
+
+        ProfileActivity.flag = false;
     }
 
     @Override

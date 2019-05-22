@@ -28,7 +28,7 @@
                 app:srcCompat="@drawable/ic_arrow_back_white_24dp" />
 
             <ImageView
-                android:id="@+id/friend_photo"
+                android:id="@+id/send_image"
                 android:layout_width="@dimen/ninety_dp"
                 android:layout_height="@dimen/ninety_dp"
                 android:layout_gravity="center"

@@ -13,6 +13,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -77,6 +79,8 @@ public class FriendsListActivity extends AppCompatActivity implements Navigation
             navigationView.getMenu().clear();
             navigationView.inflateMenu(R.menu.activity_main_drawer);
 
+            resetNav();
+
         } else if (id == R.id.home) {
 
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
@@ -109,5 +113,15 @@ public class FriendsListActivity extends AppCompatActivity implements Navigation
 
         FriendListRecyclerAdapter friendListRecycperAdapter = new FriendListRecyclerAdapter(context, friendList);
         recyclerView.setAdapter(friendListRecycperAdapter);
+    }
+
+    public void resetNav(){
+        TextView name = findViewById(R.id.user_name);
+        TextView email = findViewById(R.id.user_email);
+        ImageView photo = findViewById(R.id.send_image);
+
+        name.setText(R.string.user_name);
+        email.setText(R.string.example_email);
+        photo.setImageResource(R.drawable.ic_person_black_24dp);
     }
 }

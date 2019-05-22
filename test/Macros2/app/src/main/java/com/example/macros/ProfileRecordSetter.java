@@ -2,9 +2,10 @@ package com.example.macros;
 
 public class ProfileRecordSetter {
     private String protein;
-    private String fats;
+    private String fat;
     private String carbs;
     private String date;
+    private String note;
 
     public ProfileRecordSetter() {
     }
@@ -17,12 +18,12 @@ public class ProfileRecordSetter {
         this.protein = protein;
     }
 
-    public String getFats() {
-        return fats;
+    public String getFat() {
+        return fat;
     }
 
-    public void setFats(String fats) {
-        this.fats = fats;
+    public void setFat(String fat) {
+        this.fat = fat;
     }
 
     public String getCarbs() {
@@ -41,10 +42,19 @@ public class ProfileRecordSetter {
         this.date = date;
     }
 
-    public ProfileRecordSetter(String protein, String fats, String carbs, String date) {
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public ProfileRecordSetter(String protein, String fat, String carbs, String date, String note) {
         this.protein = protein;
-        this.fats = fats;
+        this.fat = fat;
         this.carbs = carbs;
         this.date = date;
+        this.note = note;
     }
 }
