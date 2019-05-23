@@ -63,5 +63,10 @@
     <string name="time">11:59PM</string>
     <string name="remain">Remaining</string>
     <string name="user_name">User Name</string>
+    <string name="friends">Friends</string>
+    <string name="zero">0</string>
+    <string name="sent">Request Sent</string>
+    <string name="accept">Accept</string>
+    <string name="pending">Pending…</string>
 
 </resources>

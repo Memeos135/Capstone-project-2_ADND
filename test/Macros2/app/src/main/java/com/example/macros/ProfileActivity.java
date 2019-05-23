@@ -64,8 +64,6 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
             navigationView.getMenu().clear();
             navigationView.inflateMenu(R.menu.logged_drawer);
 
-
-
             setupProfileImage();
         }
     }
@@ -155,10 +153,6 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         onBackPressed();
     }
 
-    public void editHandler(View view){
-        Toast.makeText(this, "Edit", Toast.LENGTH_SHORT).show();
-    }
-
     public void radioHandler(View view) {
         RadioButton radioButton = (RadioButton) view;
 
@@ -169,6 +163,8 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
                 // first check if current fragment is NOT Overview
                 if (getSupportFragmentManager().getFragments().get(0).toString().startsWith("ProfileFragment")) {
 
+                    Toast.makeText(this, "ProfileFragment", Toast.LENGTH_SHORT).show();
+
                     flag = true;
 
                     fragmentManager.beginTransaction().remove(profileFragment).commit();
@@ -178,6 +174,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
                         fragmentManager.beginTransaction().add(R.id.fragment_container, profileFragmentTwo).commit();
                     }else{
                         fragmentManager.popBackStack();
+                        flag = false;
                     }
                 }
 
@@ -185,6 +182,8 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
 
                 // first check if current fragment is NOT Target
                 if (getSupportFragmentManager().getFragments().get(0).toString().startsWith("ProfileFragmentTwo")) {
+
+                    Toast.makeText(this, "ProfileFragmentTwo", Toast.LENGTH_SHORT).show();
 
                     flag = true;
 
@@ -195,10 +194,13 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
                         fragmentManager.beginTransaction().add(R.id.fragment_container, profileFragment).commit();
                     }else{
                         fragmentManager.popBackStack();
+                        flag = false;
                     }
 
                 }
             }
+        }else{
+            flag = false;
         }
     }
 

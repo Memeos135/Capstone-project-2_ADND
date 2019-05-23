@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -27,10 +26,21 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.profile_activity_fragment, container, false);
 
+        setupDate(view);
+
         if(FirebaseAuth.getInstance().getCurrentUser()!=null){
             setupProgressBars(view);
         }
         return view;
+    }
+
+    public void setupDate(View view){
+        int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+        int month = Calendar.getInstance().get(Calendar.MONTH);
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+
+        TextView date = view.findViewById(R.id.date);
+        date.setText(day + "/" + month + "/" + year);
     }
 
     public void setupProgressBars(final View view){
@@ -124,10 +134,7 @@ public class ProfileFragment extends Fragment {
 
                     calculateCalories(carbMax, fatMax, proteinMax, proteinText.getText().toString(), carbsText.getText().toString(), fatText.getText().toString(), view);
 
-                }else{
-//                    Toast.makeText(getContext(), "No records found", Toast.LENGTH_SHORT).show();
                 }
-
             }
 
             @Override
@@ -162,6 +169,5 @@ public class ProfileFragment extends Fragment {
         cal_progress.setProgress((int)percent);
 
         ProfileActivity.flag = false;
-
     }
 }

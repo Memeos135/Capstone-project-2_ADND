@@ -59,7 +59,7 @@ public class FriendsRecyclerAdapter extends RecyclerView.Adapter<FriendsRecycler
 
             name = itemView.findViewById(R.id.friend_name);
             photo = itemView.findViewById(R.id.send_image);
-            last_message = itemView.findViewById(R.id.last_msg_value);
+            last_message = itemView.findViewById(R.id.email_val);
             last_seen = itemView.findViewById(R.id.last_seen);
             container = itemView.findViewById(R.id.container);
         }

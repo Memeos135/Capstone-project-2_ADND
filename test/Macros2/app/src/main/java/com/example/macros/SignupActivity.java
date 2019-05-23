@@ -223,15 +223,23 @@ public class SignupActivity extends AppCompatActivity implements NavigationView.
         });
     }
 
-    public void storeUserRecord(String uID, final Uri downloadUri){
+    public void storeUserRecord(final String uID, final Uri downloadUri){
         DatabaseReference tempRef = FirebaseDatabase.getInstance().getReference().child("users").child(uID);
 
-        tempRef.setValue(new UserProfileRecord(new UserCreds(email, password, downloadUri.toString(), fName), new UserGoalMacros(protein, carbs, fats))).addOnSuccessListener(new OnSuccessListener<Void>() {
+        tempRef.setValue(new UserProfileRecord(new UserCreds(email, password, downloadUri.toString(), fName), new UserGoalMacros(protein, carbs, fats)))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                startActivity(new Intent(getApplicationContext(), LoginActivity.class)
-                .putExtra("username", email)
-                .putExtra("password", password));
+                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("search");
+
+                databaseReference.push().setValue(new SearchNode(uID, fName)).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        startActivity(new Intent(getApplicationContext(), LoginActivity.class)
+                                .putExtra("username", email)
+                                .putExtra("password", password));
+                    }
+                });
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

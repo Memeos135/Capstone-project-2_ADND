@@ -17,7 +17,7 @@
 
     <android.support.v7.widget.CardView
         android:id="@+id/circularCard"
-        android:layout_width="@dimen/ninety_dp"
+        android:layout_width="@dimen/one_hundred_dp"
         android:layout_height="@dimen/one_hundred_dp"
         android:layout_gravity="center"
         android:layout_marginStart="@dimen/eight_dp"
@@ -32,8 +32,8 @@
 
         <ImageView
             android:id="@+id/send_image"
-            android:layout_width="@dimen/eighty_dp"
-            android:layout_height="@dimen/eighty_dp"
+            android:layout_width="@dimen/one_hundred_dp"
+            android:layout_height="@dimen/one_hundred_dp"
             android:layout_gravity="center"
             app:srcCompat="@drawable/ic_person_black_24dp" />
 
@@ -47,7 +47,6 @@
         android:layout_marginTop="@dimen/sixteen_dp"
         android:layout_marginEnd="@dimen/sixteen_dp"
         android:gravity="center"
-        android:text="@string/author"
         android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -57,7 +56,7 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/eighty_dp"
+        android:layout_height="@dimen/forty_dp"
         android:layout_marginTop="@dimen/twenty_dp"
         android:background="@drawable/side_nav_bar"
         app:layout_constraintEnd_toEndOf="parent"
@@ -68,26 +67,14 @@
             android:id="@+id/followers_val"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/eight_dp"
-            android:text="@string/temp_calorie"
-            android:textColor="@color/colorAccent"
-            android:textSize="24sp"
-            app:layout_constraintBottom_toTopOf="@+id/following_label"
-            app:layout_constraintEnd_toEndOf="@+id/followers_label"
-            app:layout_constraintStart_toStartOf="@+id/followers_label" />
-
-        <TextView
-            android:id="@+id/followers_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/sixty_four_dp"
-            android:shadowDx="@dimen/minus_two_dp"
-            android:shadowDy="@dimen/minus_two_dp"
-            android:shadowRadius="@dimen/one"
-            android:text="@string/followers"
-            android:textColor="@color/white"
+            android:text="@string/zero"
+            android:textColor="@color/colorAccent"
+            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@+id/following_label"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/following_label"
+            app:layout_constraintVertical_bias="0.307" />
 
         <TextView
             android:id="@+id/following_label"
@@ -98,22 +85,11 @@
             android:shadowDx="@dimen/minus_two_dp"
             android:shadowDy="@dimen/minus_two_dp"
             android:shadowRadius="@dimen/one"
-            android:text="@string/following"
+            android:text="@string/friends"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <TextView
-            android:id="@+id/following_val"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/eight_dp"
-            android:text="@string/temp_carbs"
-            android:textColor="@color/colorAccent"
-            android:textSize="24sp"
-            app:layout_constraintBottom_toTopOf="@+id/following_label"
-            app:layout_constraintEnd_toEndOf="@+id/following_label"
-            app:layout_constraintStart_toStartOf="@+id/following_label" />
     </android.support.constraint.ConstraintLayout>
 
     <FrameLayout
@@ -128,9 +104,12 @@
         app:layout_constraintTop_toBottomOf="@+id/user_name">
 
         <android.support.v7.widget.CardView
+            android:id="@+id/friend_card"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:alpha="0"
+            android:visibility="gone"
             app:cardBackgroundColor="@color/background_black">
 
             <Button
@@ -157,8 +136,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/eight_dp"
         android:layout_marginEnd="@dimen/eight_dp"
+        android:alpha="0"
         android:clickable="true"
         android:onClick="chatFabHandler"
+        android:visibility="gone"
         app:backgroundTint="@color/card_grey"
         app:elevation="@dimen/fab_elevation"
         app:layout_constraintBottom_toBottomOf="@+id/circularCard"

@@ -16,11 +16,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,11 +37,15 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     Context context;
+    RecyclerView recyclerView;
+    ArrayList<SearchNode> searchList;
+    boolean searchFlag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +97,37 @@ public class MainActivity extends AppCompatActivity
             navigationView.inflateMenu(R.menu.logged_drawer);
 
             fetchUserBrief();
+            readPending();
         }
+    }
+
+    public void readPending(){
+        final int[] counter = {0};
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child("pendingInvites");
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
+                        counter[0]++;
+                    }
+
+                    NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+                    Menu menu = navigationView.getMenu();
+
+                    MenuItem pending = menu.findItem(R.id.pending);
+                    pending.setTitle("Pending Invites " + Arrays.toString(counter));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     public void fetchUserBrief(){
@@ -143,28 +180,87 @@ public class MainActivity extends AppCompatActivity
         dialog.show();
 
         setupSearchRecycler(dialog);
+
+        final EditText search = dialog.findViewById(R.id.msg_text);
+
+        search.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if(keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                    searchFlag = true;
+                    reloadList(search.getText().toString());
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    public void reloadList(final String text){
+
+        searchList.clear();
+        recyclerView.getAdapter().notifyDataSetChanged();
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("search");
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    // to prevent double trigger
+                    if(searchFlag) {
+                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                            if (dataSnapshot1.child("name").toString().toLowerCase().contains(text.toLowerCase())) {
+                                SearchNode searchNode = dataSnapshot1.getValue(SearchNode.class);
+                                searchList.add(searchNode);
+                            }
+                        }
+                        SearchRecyclerAdapter searchRecyclerAdapter = new SearchRecyclerAdapter(context, searchList);
+                        recyclerView.setAdapter(searchRecyclerAdapter);
+                        searchFlag = false;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     public void setupSearchRecycler(Dialog dialog){
-        RecyclerView recyclerView = (RecyclerView) dialog.findViewById(R.id.searchRecycler);
+        recyclerView = (RecyclerView) dialog.findViewById(R.id.searchRecycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
         setupSearchList(recyclerView);
     }
 
     public void setupSearchList(RecyclerView recyclerView){
-        ArrayList<SearchResult> searchList = new ArrayList<>();
+        searchList = new ArrayList<>();
 
-        searchList.add(new SearchResult("Mohammed Bokhari"));
-        searchList.add(new SearchResult("Mohammed Bokhari"));
-        searchList.add(new SearchResult("Mohammed Bokhari"));
-        searchList.add(new SearchResult("Mohammed Bokhari"));
-        searchList.add(new SearchResult("Mohammed Bokhari"));
-        searchList.add(new SearchResult("Mohammed Bokhari"));
-        searchList.add(new SearchResult("Mohammed Bokhari"));
+        readSearchNode(searchList, recyclerView);
+    }
 
-        SearchRecyclerAdapter searchRecyclerAdapter = new SearchRecyclerAdapter(context, searchList);
-        recyclerView.setAdapter(searchRecyclerAdapter);
+    public void readSearchNode(final ArrayList<SearchNode> searchList, final RecyclerView recyclerView){
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("search");
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                        SearchNode searchNode = dataSnapshot1.getValue(SearchNode.class);
+                        searchList.add(searchNode);
+                    }
+                    SearchRecyclerAdapter searchRecyclerAdapter = new SearchRecyclerAdapter(context, searchList);
+                    recyclerView.setAdapter(searchRecyclerAdapter);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
@@ -223,7 +319,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.pending) {
 
-            Toast.makeText(this, "Pending", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(context, PendingFriendsActivity.class));
 
         } else if (id == R.id.signout) {
 

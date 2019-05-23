@@ -3,6 +3,7 @@ package com.example.macros;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -11,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -18,6 +20,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -105,14 +112,64 @@ public class FriendsListActivity extends AppCompatActivity implements Navigation
     public void setupRecyclerAdapter(RecyclerView recyclerView){
         ArrayList<FriendInfo> friendList = new ArrayList<>();
 
-        friendList.add(new FriendInfo("1","Mohammed Ibrahim K. Bokhari", "https://www.google.com"));
-        friendList.add(new FriendInfo("1", "Mohammed Ibrahim K. Bokhari", "https://www.google.com"));
-        friendList.add(new FriendInfo("1", "Mohammed Ibrahim K. Bokhari", "https://www.google.com"));
-        friendList.add(new FriendInfo("1", "Mohammed Ibrahim K. Bokhari", "https://www.google.com"));
-        friendList.add(new FriendInfo("1","Mohammed Ibrahim K. Bokhari", "https://www.google.com"));
+        setupRecyclerData(friendList, recyclerView);
+    }
 
-        FriendListRecyclerAdapter friendListRecycperAdapter = new FriendListRecyclerAdapter(context, friendList);
-        recyclerView.setAdapter(friendListRecycperAdapter);
+    public void setupRecyclerData(final ArrayList<FriendInfo> friendInfos, final RecyclerView recyclerView){
+        final ArrayList<String> ids = new ArrayList<>();
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child("friends");
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
+                        ids.add(dataSnapshot1.getValue().toString());
+                    }
+                    getTheActualData(friendInfos, ids, recyclerView);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void getTheActualData(final ArrayList<FriendInfo> friendInfos, final ArrayList<String> ids, final RecyclerView recyclerView){
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users");
+
+        for(int i = 0; i < ids.size(); i++){
+            final int finalI = i;
+            databaseReference.child(ids.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.exists()){
+                        for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
+                            if(dataSnapshot1.getKey().equals("userCreds")){
+                                String name = dataSnapshot1.child("name").getValue().toString();
+                                String id = ids.get(finalI);
+                                String photo = dataSnapshot1.child("profile_picture").getValue().toString();
+
+                                FriendInfo friendInfo = new FriendInfo(id, name, photo);
+                                friendInfos.add(friendInfo);
+                            }
+                        }
+                        FriendListRecyclerAdapter friendListRecycperAdapter = new FriendListRecyclerAdapter(context, friendInfos);
+                        recyclerView.setAdapter(friendListRecycperAdapter);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
+
     }
 
     public void resetNav(){

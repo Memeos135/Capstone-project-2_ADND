@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/lower_constraint"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -12,8 +13,6 @@
         android:layout_marginTop="@dimen/eight_dp"
         android:layout_marginEnd="@dimen/forty_eight_dp"
         android:layout_marginBottom="@dimen/forty_eight_dp"
-        android:max="100"
-        android:progress="87"
         android:theme="@style/progressBars"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -38,8 +37,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/eight_dp"
         android:layout_marginEnd="@dimen/forty_eight_dp"
-        android:max="100"
-        android:progress="25"
         android:theme="@style/progressBars"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -53,8 +50,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/eight_dp"
         android:layout_marginEnd="@dimen/forty_eight_dp"
-        android:max="100"
-        android:progress="55"
         android:theme="@style/progressBars"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -86,7 +81,6 @@
         android:id="@+id/protein_remain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/temp_percent"
         android:textColor="@color/colorAccent"
         app:layout_constraintEnd_toEndOf="@+id/protein_progress"
         app:layout_constraintTop_toTopOf="@+id/protein_label" />
@@ -95,7 +89,6 @@
         android:id="@+id/carbs_remain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/temp_percent"
         android:textColor="@color/colorAccent"
         app:layout_constraintEnd_toEndOf="@+id/carbs_progress"
         app:layout_constraintTop_toTopOf="@+id/carbs_label" />
@@ -104,9 +97,18 @@
         android:id="@+id/fat_remain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/temp_percent"
         android:textColor="@color/colorAccent"
         app:layout_constraintEnd_toEndOf="@+id/fat_progress"
         app:layout_constraintTop_toTopOf="@+id/fat_label" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/full_gradient" />
 
 </android.support.constraint.ConstraintLayout>

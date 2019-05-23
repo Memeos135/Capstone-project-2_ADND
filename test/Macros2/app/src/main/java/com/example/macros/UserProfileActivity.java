@@ -1,24 +1,45 @@
 package com.example.macros;
 
+import android.animation.Animator;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
+
+import java.util.Calendar;
 
 public class UserProfileActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    boolean baseFlag = false;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +55,400 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        loadUserInfo();
+        readFriendsCount();
+
+        if(FirebaseAuth.getInstance().getCurrentUser()!=null){
+            readTodayMacros();
+            removeGradient();
+        }
+    }
+
+    public void readFriendsCount(){
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(getIntent().getStringExtra("uID"))
+                .child("friends");
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                TextView friend_count = findViewById(R.id.followers_val);
+                int counter = 0;
+
+                if(dataSnapshot.exists()){
+                    for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
+                        counter++;
+                    }
+                    friend_count.setText(String.valueOf(counter));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void removeGradient(){
+        ImageView imageView = findViewById(R.id.imageView3);
+        ConstraintLayout constraintLayout = findViewById(R.id.lower_constraint);
+        constraintLayout.removeView(imageView);
+    }
+
+    public void showAddFriend(){
+        final CardView cardView = findViewById(R.id.friend_card);
+        cardView.animate().alpha(1).setDuration(300).setListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                cardView.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+    }
+
+    public void showFab(){
+        final FloatingActionButton floatingActionButton = findViewById(R.id.chat_fab);
+        floatingActionButton.animate().alpha(1).setDuration(300).setListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @SuppressLint("RestrictedApi")
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                floatingActionButton.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+    }
+
+    public void readTodayMacros(){
+        final ProgressBar protein = findViewById(R.id.protein_progress);
+        final ProgressBar carbs = findViewById(R.id.carbs_progress);
+        final ProgressBar fats = findViewById(R.id.fat_progress);
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(getIntent().getStringExtra("uID"))
+                .child("userGoalMacros");
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
+                        if(dataSnapshot1.getKey().equals("carbs")){
+                            carbs.setMax(Integer.parseInt(dataSnapshot1.getValue().toString()));
+                        }else if(dataSnapshot1.getKey().equals("protein")){
+                            protein.setMax(Integer.parseInt(dataSnapshot1.getValue().toString()));
+                        }else if(dataSnapshot1.getKey().equals("fats")){
+                            fats.setMax(Integer.parseInt(dataSnapshot1.getValue().toString()));
+                        }
+                    }
+                    setCurrents(protein, carbs, fats);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void setCurrents(final ProgressBar protein, final ProgressBar carbs, final ProgressBar fats){
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+        int month = Calendar.getInstance().get(Calendar.MONTH)+1;
+        int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(getIntent().getStringExtra("uID"))
+                .child("currentMacrosProgress").child(String.valueOf(year))
+                .child(String.valueOf(month)).child(String.valueOf(day));
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
+                        if(dataSnapshot1.getKey().equals("protein")){
+                            protein.setProgress(Integer.parseInt(dataSnapshot1.getValue().toString()));
+                        }else if(dataSnapshot1.getKey().equals("carbs")){
+                            carbs.setProgress(Integer.parseInt(dataSnapshot1.getValue().toString()));
+                        }else if(dataSnapshot1.getKey().equals("fat")){
+                            fats.setProgress(Integer.parseInt(dataSnapshot1.getValue().toString()));
+                        }
+                    }
+                    setPercentages(protein, carbs, fats);
+                }else{
+                    checkIfUserIsSame();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void setPercentages(ProgressBar protein, ProgressBar carbs, ProgressBar fats){
+        TextView protein_percent = findViewById(R.id.protein_remain);
+        TextView carbs_percent = findViewById(R.id.carbs_remain);
+        TextView fat_percent = findViewById(R.id.fat_remain);
+
+        double proteinVal = ((double)protein.getProgress() / (double)protein.getMax())*100;
+        double carbsVal = ((double)carbs.getProgress() / (double)carbs.getMax())*100;
+        double fatVal = ((double)fats.getProgress() / (double)fats.getMax())*100;
+
+        protein_percent.setText((int)proteinVal+"%");
+        carbs_percent.setText((int)carbsVal+"%");
+        fat_percent.setText((int)fatVal+"%");
+
+        checkIfUserIsSame();
+    }
+
+    public void checkIfUserIsSame(){
+        // check if I am seeing myself
+        if(!FirebaseAuth.getInstance().getCurrentUser().getUid().equals(getIntent().getStringExtra("uID"))) {
+            Log.i("XXX", "passed NOT SAME USER");
+            checkIfUserIsFriend();
+        }
+    }
+
+    public void checkRequests(){
+        final boolean[] flag = {false};
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child("friendRequests");
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
+                        if(dataSnapshot1.getValue().toString().equals(getIntent().getStringExtra("uID"))){
+                            flag[0] = true;
+                            break;
+                        }
+                    }
+                    if(flag[0]){
+                        showSentRequest();
+                    }else{
+                        Log.i("XXX", "passed not in REQUESTS");
+                        checkPending();
+                    }
+                }else{
+                    Log.i("XXX", "passed not in REQUESTS");
+                    checkPending();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void checkPending(){
+        final boolean[] pendingFlag = {false};
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child("pendingInvites");
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
+                        if(dataSnapshot1.getValue().toString().equals(getIntent().getStringExtra("uID"))){
+                            pendingFlag[0] = true;
+                            break;
+                        }
+                    }
+                    if(pendingFlag[0]){
+                        showPending();
+                    }else{
+                        Log.i("XXX", "passed not in PENDING");
+                        showAddFriend();
+                    }
+                }else{
+                    Log.i("XXX", "passed not in PENDING");
+                    showAddFriend();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void showPending(){
+        final CardView cardView = findViewById(R.id.friend_card);
+        cardView.animate().alpha(1).setDuration(300).setListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                cardView.setVisibility(View.VISIBLE);
+                Button button = findViewById(R.id.add_button);
+                button.setText(R.string.pending);
+                button.setBackgroundColor(button.getResources().getColor(R.color.grey));
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+    }
+
+    public void showSentRequest(){
+        final CardView cardView = findViewById(R.id.friend_card);
+        cardView.animate().alpha(1).setDuration(300).setListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                cardView.setVisibility(View.VISIBLE);
+                Button button = findViewById(R.id.add_button);
+                button.setText(R.string.sent);
+                button.setBackgroundColor(button.getResources().getColor(R.color.grey));
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+    }
+
+    public void addFriend(final Button button){
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(getIntent().getStringExtra("uID"))
+                .child("pendingInvites");
+
+        databaseReference.push().setValue(FirebaseAuth.getInstance().getCurrentUser().getUid()).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    addToMyRequests(button);
+                }
+            }
+        });
+    }
+
+    public void addToMyRequests(final Button button){
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child("friendRequests");
+
+        databaseReference.push().setValue(getIntent().getStringExtra("uID")).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    button.setText(R.string.sent);
+                    button.setBackgroundColor(button.getResources().getColor(R.color.grey));
+                }
+            }
+        });
+    }
+
+    public void checkIfUserIsFriend(){
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child("friends");
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
+                        if(dataSnapshot1.getValue().toString().equals(getIntent().getStringExtra("uID"))){
+                            baseFlag = true;
+                            break;
+                        }
+                    }
+                    if(!baseFlag){
+                        Log.i("XXX", "passed NOT FRIENDS");
+                        checkRequests();
+                    }else{
+                        showFab();
+                    }
+                }else{
+                    Log.i("XXX", "passed NOT FRIENDS");
+                    checkRequests();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void loadUserInfo(){
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(getIntent().getStringExtra("uID"))
+                .child("userCreds");
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
+                        if(dataSnapshot1.getKey().equals("profile_picture")) {
+                            ImageView photo = findViewById(R.id.send_image);
+                            Picasso.get().load(dataSnapshot1.getValue().toString()).centerCrop().fit().into(photo);
+                        }else if(dataSnapshot1.getKey().equals("name")){
+                            TextView name = findViewById(R.id.user_name);
+                            name.setText(dataSnapshot1.getValue().toString());
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -83,8 +498,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
 
     public void handleButton(View view){
         Button button = (Button) view;
-
-        Toast.makeText(this, "FriendButton", Toast.LENGTH_SHORT).show();
+        addFriend(button);
     }
 
     public void backImageHandler(View view){
