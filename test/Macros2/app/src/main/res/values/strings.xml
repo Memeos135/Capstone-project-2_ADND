@@ -68,5 +68,7 @@
     <string name="sent">Request Sent</string>
     <string name="accept">Accept</string>
     <string name="pending">Pending…</string>
+    <string name="mob_num">Mobile Number</string>
+    <string name="chat">Chat</string>
 
 </resources>

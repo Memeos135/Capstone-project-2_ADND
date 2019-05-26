@@ -26,7 +26,6 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -43,7 +42,6 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     Context context;
-    RecyclerView recyclerView;
     ArrayList<SearchNode> searchList;
     boolean searchFlag = false;
 
@@ -51,12 +49,10 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         context = this;
 
         FloatingActionButton fab_search = (FloatingActionButton) findViewById(R.id.fab_search);
-        FloatingActionButton fab_chat = (FloatingActionButton) findViewById(R.id.fab_chat);
         FloatingActionButton fab_friends = (FloatingActionButton) findViewById(R.id.fab_friends);
 
         fab_search.setOnClickListener(new View.OnClickListener() {
@@ -68,13 +64,6 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        fab_chat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(context, ChatActivity.class));
-            }
-        });
-
         fab_friends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,17 +71,19 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         // check if user is logged in
-        if(FirebaseAuth.getInstance().getCurrentUser()!=null){
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             navigationView.getMenu().clear();
             navigationView.inflateMenu(R.menu.logged_drawer);
 
@@ -143,7 +134,6 @@ public class MainActivity extends AppCompatActivity
 
                             TextView name = findViewById(R.id.user_name);
                             name.setText(dataSnapshot1.getValue().toString());
-
                         }else if(dataSnapshot1.getKey().equals("profile_picture")){
 
                             ImageView photo = findViewById(R.id.send_image);
@@ -198,6 +188,8 @@ public class MainActivity extends AppCompatActivity
 
     public void reloadList(final String text){
 
+        final RecyclerView recyclerView = findViewById(R.id.searchRecycler);
+
         searchList.clear();
         recyclerView.getAdapter().notifyDataSetChanged();
 
@@ -229,7 +221,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void setupSearchRecycler(Dialog dialog){
-        recyclerView = (RecyclerView) dialog.findViewById(R.id.searchRecycler);
+        RecyclerView recyclerView = (RecyclerView) dialog.findViewById(R.id.searchRecycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
         setupSearchList(recyclerView);
@@ -350,7 +342,7 @@ public class MainActivity extends AppCompatActivity
             navigationView.getMenu().clear();
             navigationView.inflateMenu(R.menu.logged_drawer);
 
-            fetchUserBrief();
+            readPending();
 
         }else{
 
@@ -362,6 +354,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void resetNav(){
+
         TextView name = findViewById(R.id.user_name);
         TextView email = findViewById(R.id.user_email);
         ImageView photo = findViewById(R.id.send_image);

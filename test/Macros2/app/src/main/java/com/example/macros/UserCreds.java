@@ -5,6 +5,7 @@ public class UserCreds {
     private String password;
     private String profile_picture;
     private String name;
+    private String mobileNumber;
 
     public String getEmail() {
         return email;
@@ -30,9 +31,6 @@ public class UserCreds {
         this.profile_picture = profile_picture;
     }
 
-    public UserCreds() {
-    }
-
     public String getName() {
         return name;
     }
@@ -41,10 +39,22 @@ public class UserCreds {
         this.name = name;
     }
 
-    public UserCreds(String email, String password, String profile_picture, String name) {
+    public String getMobileNumber() {
+        return mobileNumber;
+    }
+
+    public void setMobileNumber(String mobileNumber) {
+        this.mobileNumber = mobileNumber;
+    }
+
+    public UserCreds() {
+    }
+
+    public UserCreds(String email, String password, String profile_picture, String name, String mobileNumber) {
         this.email = email;
         this.password = password;
         this.profile_picture = profile_picture;
         this.name = name;
+        this.mobileNumber = mobileNumber;
     }
 }

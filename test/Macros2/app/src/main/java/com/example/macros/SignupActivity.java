@@ -1,10 +1,16 @@
 package com.example.macros;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -15,6 +21,7 @@ import android.transition.TransitionManager;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +40,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+
 public class SignupActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private String email;
@@ -42,6 +51,7 @@ public class SignupActivity extends AppCompatActivity implements NavigationView.
     private String protein;
     private String carbs;
     private String fats;
+    private String mobileNumber;
     private Uri selectedImage;
     private FirebaseAuth mAuth;
     private StorageReference storageReference;
@@ -62,12 +72,24 @@ public class SignupActivity extends AppCompatActivity implements NavigationView.
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        imageListener();
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         if(FirebaseAuth.getInstance().getCurrentUser()!=null){
             navigationView.getMenu().clear();
             navigationView.inflateMenu(R.menu.logged_drawer);
+        }
+
+        checkPermission();
+    }
+
+    public void checkPermission(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+            }
         }
     }
 
@@ -120,12 +142,14 @@ public class SignupActivity extends AppCompatActivity implements NavigationView.
     }
 
     public void runRegex(){
-        TextView firstName = findViewById(R.id.name_input);
-        TextView email = findViewById(R.id.email_input);
-        TextView password = findViewById(R.id.password_input);
-        TextView passConf = findViewById(R.id.confpass_input);
+        EditText firstName = findViewById(R.id.name_input);
+        EditText email = findViewById(R.id.email_input);
+        EditText password = findViewById(R.id.password_input);
+        EditText passConf = findViewById(R.id.confpass_input);
+        EditText mobileNumber = findViewById(R.id.phone_number);
 
-        if(firstName.getText().toString().equals("") || email.getText().toString().equals("") || passConf.getText().toString().equals("") || password.getText().toString().equals("")){
+        if(firstName.getText().toString().equals("") || email.getText().toString().equals("") || passConf.getText().toString().equals("") || password.getText().toString().equals("")
+                || mobileNumber.getText().toString().equals("")){
             Toast.makeText(this, "Please fill all empty fields", Toast.LENGTH_SHORT).show();
         }else{
             if(!checkContainsDigit(firstName.getText().toString())){
@@ -135,14 +159,19 @@ public class SignupActivity extends AppCompatActivity implements NavigationView.
                     if(!passConf.getText().toString().equals(password.getText().toString())){
                         Toast.makeText(this, "Both passwords must match", Toast.LENGTH_SHORT).show();
                     }else {
-                        fName = firstName.getText().toString();
-                        this.email = email.getText().toString();
-                        this.password = password.getText().toString();
-                        confPassword = passConf.getText().toString();
+                        if(mobileNumber.getText().toString().startsWith("0")){
+                            Toast.makeText(this, "Please leave out the zero prefix - e.g 547171060 instead of 0547171060", Toast.LENGTH_SHORT).show();
+                        }else {
+                            fName = firstName.getText().toString();
+                            this.email = email.getText().toString();
+                            this.password = password.getText().toString();
+                            confPassword = passConf.getText().toString();
+                            this.mobileNumber = mobileNumber.getText().toString();
 
-                        TransitionManager.go(Scene.getSceneForLayout((ViewGroup) findViewById(R.id.scene_root),
-                                R.layout.signup_activity_root_two,
-                                this));
+                            TransitionManager.go(Scene.getSceneForLayout((ViewGroup) findViewById(R.id.scene_root),
+                                    R.layout.signup_activity_root_two,
+                                    this));
+                        }
                     }
                 }
             }else{
@@ -226,7 +255,7 @@ public class SignupActivity extends AppCompatActivity implements NavigationView.
     public void storeUserRecord(final String uID, final Uri downloadUri){
         DatabaseReference tempRef = FirebaseDatabase.getInstance().getReference().child("users").child(uID);
 
-        tempRef.setValue(new UserProfileRecord(new UserCreds(email, password, downloadUri.toString(), fName), new UserGoalMacros(protein, carbs, fats)))
+        tempRef.setValue(new UserProfileRecord(new UserCreds(email, password, downloadUri.toString(), fName, mobileNumber), new UserGoalMacros(protein, carbs, fats)))
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -249,12 +278,18 @@ public class SignupActivity extends AppCompatActivity implements NavigationView.
         });
     }
 
-    public void profileImageHandler(View view){
-        // Open gallery
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1);
+    public void imageListener(){
+        ImageView image = findViewById(R.id.send_image);
+        image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Open gallery
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1);
+            }
+        });
     }
 
     @Override
@@ -262,9 +297,25 @@ public class SignupActivity extends AppCompatActivity implements NavigationView.
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 1 && data != null){
             // Load image
-            selectedImage = data.getData();
-            Picasso.get().load(selectedImage).noPlaceholder().centerCrop().fit().into((ImageView) findViewById(R.id.send_image));
+            if(data.getDataString().contains("external")){
+                String path = getPath(data.getDataString());
+                File file = new File(path);
+                selectedImage = Uri.fromFile(file);
+                ((ImageView) findViewById(R.id.send_image)).setImageResource(R.drawable.ic_check_red_24dp);
+            }else{
+                selectedImage = data.getData();
+                Picasso.get().load(selectedImage).noPlaceholder().centerCrop().fit().into((ImageView) findViewById(R.id.send_image));
+            }
         }
+    }
+
+    public String getPath(String data){
+        Cursor c = getContentResolver().query(
+                Uri.parse(data),null,null,null,null);
+        c.moveToNext();
+        String path = c.getString(c.getColumnIndex(MediaStore.MediaColumns.DATA));
+        c.close();
+        return path;
     }
 
     @Override

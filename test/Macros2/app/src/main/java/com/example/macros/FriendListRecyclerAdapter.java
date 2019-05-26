@@ -2,6 +2,7 @@ package com.example.macros;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -76,6 +77,37 @@ public class FriendListRecyclerAdapter extends RecyclerView.Adapter<FriendListRe
                 removeFromFirebase(i);
             }
         });
+
+        myViewHolder.chat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                myViewHolder.spinner.setVisibility(View.GONE);
+                fetchNumber(i);
+            }
+        });
+    }
+
+    public void fetchNumber(int i){
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(friendList.get(i).getId())
+                .child("userCreds").child("mobileNumber");
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    String number = dataSnapshot.getValue().toString();
+                    Uri uri = Uri.parse("smsto: " + number);
+                    Intent i = new Intent(Intent.ACTION_SENDTO, uri);
+                    i.setPackage("com.whatsapp");
+                    mInflater.getContext().startActivity(i);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     public void removeFromFirebase(final int position){
@@ -122,6 +154,7 @@ public class FriendListRecyclerAdapter extends RecyclerView.Adapter<FriendListRe
         ImageView dropDown;
         LinearLayout spinner;
         TextView remove_friend;
+        TextView chat;
 
         public MyViewHolder( View itemView) {
             super(itemView);
@@ -130,6 +163,7 @@ public class FriendListRecyclerAdapter extends RecyclerView.Adapter<FriendListRe
             dropDown = itemView.findViewById(R.id.drop_down_list);
             spinner = itemView.findViewById(R.id.spinner);
             remove_friend = itemView.findViewById(R.id.remove_friend);
+            chat = itemView.findViewById(R.id.chat_friend);
         }
     }
 }

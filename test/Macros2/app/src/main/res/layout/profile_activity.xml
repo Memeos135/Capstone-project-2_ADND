@@ -79,7 +79,6 @@
                         android:layout_width="@dimen/one_hundred_dp"
                         android:layout_height="@dimen/one_hundred_dp"
                         android:layout_gravity="center"
-                        android:onClick="profileImageHandler"
                         app:srcCompat="@drawable/ic_person_black_24dp" />
                 </android.support.v7.widget.CardView>
 

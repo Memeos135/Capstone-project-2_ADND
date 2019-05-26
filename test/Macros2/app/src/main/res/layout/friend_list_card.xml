@@ -88,6 +88,14 @@
                 android:layout_height="wrap_content"
                 android:padding="@dimen/eight_dp"
                 android:text="@string/remove_friend" />
+
+            <TextView
+                android:id="@+id/chat_friend"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/eight_dp"
+                android:text="@string/chat" />
+
         </LinearLayout>
 
     </android.support.constraint.ConstraintLayout>

@@ -115,6 +115,22 @@
                 android:textColorHint="@color/grey"
                 android:textSize="14sp" />
 
+            <EditText
+                android:id="@+id/phone_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/forty_eight_dp"
+                android:layout_marginTop="@dimen/forty_eight_dp"
+                android:layout_marginEnd="@dimen/forty_eight_dp"
+                android:background="@drawable/input_underline"
+                android:ems="10"
+                android:hint="@string/mob_num"
+                android:inputType="number"
+                android:paddingBottom="@dimen/ten_dp"
+                android:textColor="@color/white"
+                android:textColorHint="@color/grey"
+                android:textSize="14sp" />
+
             <Button
                 android:id="@+id/getstarted_button"
                 android:layout_width="match_parent"

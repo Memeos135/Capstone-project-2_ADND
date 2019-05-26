@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.macros">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -21,7 +24,9 @@
 
         <activity
             android:name=".MainActivity"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:configChanges="orientation|screenSize">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -50,14 +55,6 @@
             android:launchMode="singleTask" />
         <activity
             android:name=".FriendsListActivity"
-            android:theme="@style/AppTheme"
-            android:launchMode="singleTask" />
-        <activity
-            android:name=".ChatActivity"
-            android:theme="@style/AppTheme"
-            android:launchMode="singleTask" />
-        <activity
-            android:name=".SpecificChatActivity"
             android:theme="@style/AppTheme"
             android:launchMode="singleTask" />
         <activity android:name=".PendingFriendsActivity"

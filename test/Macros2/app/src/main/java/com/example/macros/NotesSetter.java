@@ -1,11 +1,33 @@
 package com.example.macros;
 
-public class NotesSetter {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class NotesSetter implements Parcelable {
 
     private String month;
     private String day;
     private String note;
     private String year;
+
+    protected NotesSetter(Parcel in) {
+        month = in.readString();
+        day = in.readString();
+        note = in.readString();
+        year = in.readString();
+    }
+
+    public static final Creator<NotesSetter> CREATOR = new Creator<NotesSetter>() {
+        @Override
+        public NotesSetter createFromParcel(Parcel in) {
+            return new NotesSetter(in);
+        }
+
+        @Override
+        public NotesSetter[] newArray(int size) {
+            return new NotesSetter[size];
+        }
+    };
 
     public String getMonth() {
         return month;
@@ -47,5 +69,18 @@ public class NotesSetter {
         this.day = day;
         this.note = note;
         this.year = year;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(month);
+        parcel.writeString(day);
+        parcel.writeString(note);
+        parcel.writeString(year);
     }
 }

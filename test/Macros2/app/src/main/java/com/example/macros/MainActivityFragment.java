@@ -104,11 +104,6 @@ public class MainActivityFragment extends Fragment{
         super.onResume();
         if(FirebaseAuth.getInstance().getCurrentUser()!=null) {
             setupRecycler(getView());
-        }else{
-            if(notesList != null && notesRecyclerAdapter != null) {
-                notesList.clear();
-                notesRecyclerAdapter.notifyDataSetChanged();
-            }
         }
     }
 }

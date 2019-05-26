@@ -30,6 +30,8 @@ import java.util.ArrayList;
 
 public class FriendsListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    ArrayList<FriendInfo> friendList;
+    FriendListRecyclerAdapter friendListRecyclerAdapter;
     Context context;
 
     @Override
@@ -110,7 +112,7 @@ public class FriendsListActivity extends AppCompatActivity implements Navigation
     }
 
     public void setupRecyclerAdapter(RecyclerView recyclerView){
-        ArrayList<FriendInfo> friendList = new ArrayList<>();
+        friendList = new ArrayList<>();
 
         setupRecyclerData(friendList, recyclerView);
     }
@@ -158,8 +160,8 @@ public class FriendsListActivity extends AppCompatActivity implements Navigation
                                 friendInfos.add(friendInfo);
                             }
                         }
-                        FriendListRecyclerAdapter friendListRecycperAdapter = new FriendListRecyclerAdapter(context, friendInfos);
-                        recyclerView.setAdapter(friendListRecycperAdapter);
+                        friendListRecyclerAdapter = new FriendListRecyclerAdapter(context, friendInfos);
+                        recyclerView.setAdapter(friendListRecyclerAdapter);
                     }
                 }
 
@@ -169,7 +171,24 @@ public class FriendsListActivity extends AppCompatActivity implements Navigation
                 }
             });
         }
+    }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelableArrayList("friendList", friendList);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        friendList = savedInstanceState.getParcelableArrayList("friendList");
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        friendListRecyclerAdapter = new FriendListRecyclerAdapter(context, friendList);
+        recyclerView.setAdapter(friendListRecyclerAdapter);
     }
 
     public void resetNav(){

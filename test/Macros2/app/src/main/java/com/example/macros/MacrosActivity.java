@@ -47,6 +47,24 @@ public class MacrosActivity extends AppCompatActivity implements NavigationView.
     String month;
     String day;
 
+    String calorie_max;
+    String calorie_percents;
+
+    String protein_current;
+    String protein_percents;
+    String protein_max;
+    String protein_remains;
+
+    String carbs_current;
+    String carbs_percents;
+    String carbs_max;
+    String carbs_remains;
+
+    String fat_current;
+    String fat_percents;
+    String fat_max;
+    String fat_remains;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,14 +83,18 @@ public class MacrosActivity extends AppCompatActivity implements NavigationView.
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        if(FirebaseAuth.getInstance().getCurrentUser()!=null){
-            navigationView.getMenu().clear();
-            navigationView.inflateMenu(R.menu.logged_drawer);
+        if(savedInstanceState == null) {
+            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                noteList = new ArrayList<>();
 
-            setupDate();
-            setupNotesRecycler();
-            setupMacroInputListener();
-            setupTargetTexts();
+                navigationView.getMenu().clear();
+                navigationView.inflateMenu(R.menu.logged_drawer);
+
+                setupDate();
+                setupNotesRecycler();
+                setupMacroInputListener();
+                setupTargetTexts();
+            }
         }
     }
 
@@ -94,6 +116,8 @@ public class MacrosActivity extends AppCompatActivity implements NavigationView.
         ProgressBar cal_prog = findViewById(R.id.progressBar);
         cal_prog.setProgress((int)percentage);
 
+        calorie_max = String.valueOf(max_calories);
+        calorie_percents = String.valueOf((int)percentage);
 
     }
 
@@ -116,7 +140,7 @@ public class MacrosActivity extends AppCompatActivity implements NavigationView.
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
+                if (dataSnapshot.child("protein").exists()) {
                     for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                         if (!dataSnapshot1.getKey().equals("notes")) {
 
@@ -128,6 +152,9 @@ public class MacrosActivity extends AppCompatActivity implements NavigationView.
                                 double percentage = (Double.parseDouble(dataSnapshot1.getValue().toString()) / carbs.getMax()) * 100;
                                 carbs_percent.setText((int) percentage + "%");
 
+                                carbs_current = dataSnapshot1.getValue().toString();
+                                carbs_percents = String.valueOf((int)percentage);
+
                             } else if (dataSnapshot1.getKey().equals("protein")) {
 
                                 protein.setProgress(Integer.parseInt(dataSnapshot1.getValue().toString()));
@@ -136,6 +163,9 @@ public class MacrosActivity extends AppCompatActivity implements NavigationView.
                                 double percentage = (Double.parseDouble(dataSnapshot1.getValue().toString()) / protein.getMax()) * 100;
                                 protein_percent.setText((int) percentage + "%");
 
+                                protein_current = dataSnapshot1.getValue().toString();
+                                protein_percents = String.valueOf((int)percentage);
+
                             } else {
 
                                 fat.setProgress(Integer.parseInt(dataSnapshot1.getValue().toString()));
@@ -143,6 +173,9 @@ public class MacrosActivity extends AppCompatActivity implements NavigationView.
 
                                 double percentage = (Double.parseDouble(dataSnapshot1.getValue().toString()) / fat.getMax()) * 100;
                                 fat_percent.setText((int) percentage + "%");
+
+                                fat_current = dataSnapshot1.getValue().toString();
+                                fat_percents = String.valueOf((int)percentage);
 
                             }
                         }
@@ -172,6 +205,10 @@ public class MacrosActivity extends AppCompatActivity implements NavigationView.
         carbs_remain.setText(String.valueOf(carb_sub));
         fat_remain.setText(String.valueOf(fat_sub));
 
+        protein_remains = String.valueOf(protein_sub);
+        carbs_remains = String.valueOf(carb_sub);
+        fat_remains = String.valueOf(fat_sub);
+
         setupCalories(protein, carbs, fat, proteinProg.getMax(), carbProg.getMax(), fatProg.getMax());
     }
 
@@ -193,17 +230,23 @@ public class MacrosActivity extends AppCompatActivity implements NavigationView.
                             carbs_target.setText(dataSnapshot1.getValue().toString());
                             setupProgressBarLimits("carbs", dataSnapshot1.getValue().toString());
 
+                            carbs_max = dataSnapshot1.getValue().toString();
+
                         } else if (counter == 1) {
 
                             TextView fat_target = findViewById(R.id.fat_target);
                             fat_target.setText(dataSnapshot1.getValue().toString());
                             setupProgressBarLimits("fat", dataSnapshot1.getValue().toString());
 
+                            fat_max = dataSnapshot1.getValue().toString();
+
                         } else {
 
                             TextView protein_target = findViewById(R.id.protein_target);
                             protein_target.setText(dataSnapshot1.getValue().toString());
                             setupProgressBarLimits("protein", dataSnapshot1.getValue().toString());
+
+                            protein_max = dataSnapshot1.getValue().toString();
                         }
                         counter++;
                     }
@@ -370,8 +413,6 @@ public class MacrosActivity extends AppCompatActivity implements NavigationView.
     }
 
     public void setupNotesAdapter(RecyclerView recyclerView){
-        noteList = new ArrayList<>();
-
         //read notes from firebase
         readNotesFirebase(noteList, recyclerView);
     }
@@ -390,6 +431,8 @@ public class MacrosActivity extends AppCompatActivity implements NavigationView.
                     macrosNotesAdapter = new MacrosNotesAdapter(context, noteList);
                     recyclerView.setAdapter(macrosNotesAdapter);
                 }else{
+                    macrosNotesAdapter = new MacrosNotesAdapter(context, noteList);
+                    recyclerView.setAdapter(macrosNotesAdapter);
                     Toast.makeText(MacrosActivity.this, "No notes have been found", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -491,7 +534,7 @@ public class MacrosActivity extends AppCompatActivity implements NavigationView.
         protein_input.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                if(keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                if(keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER && !protein_input.getText().toString().equals("")) {
                     storeCurrentProgress("protein", protein_input);
                     setupTargetTexts();
                     return true;
@@ -503,7 +546,7 @@ public class MacrosActivity extends AppCompatActivity implements NavigationView.
         carbs_input.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                if(keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                if(keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER && !carbs_input.getText().toString().equals("")) {
                     storeCurrentProgress("carbs", carbs_input);
                     setupTargetTexts();
                     return true;
@@ -515,7 +558,7 @@ public class MacrosActivity extends AppCompatActivity implements NavigationView.
         fat_input.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                if(keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                if(keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER && !fat_input.getText().toString().equals("")) {
                     storeCurrentProgress("fat", fat_input);
                     setupTargetTexts();
                     return true;
@@ -617,6 +660,106 @@ public class MacrosActivity extends AppCompatActivity implements NavigationView.
             navigationView.getMenu().clear();
             navigationView.inflateMenu(R.menu.activity_main_drawer);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString("protein_current", protein_current);
+        outState.putString("protein_max", protein_max);
+        outState.putString("protein_percent", protein_percents);
+        outState.putString("protein_remain", protein_remains);
+
+        outState.putString("carbs_current", carbs_current);
+        outState.putString("carbs_max", carbs_max);
+        outState.putString("carbs_percent", carbs_percents);
+        outState.putString("carbs_remain", carbs_remains);
+
+        outState.putString("fat_current", fat_current);
+        outState.putString("fat_max", fat_max);
+        outState.putString("fat_percent", fat_percents);
+        outState.putString("fat_remain", fat_remains);
+
+        outState.putString("calorie_max", calorie_max);
+        outState.putString("calorie_percent", calorie_percents);
+
+        outState.putString("year", String.valueOf(getIntent().getIntExtra("year",0)));
+        outState.putString("month", String.valueOf((getIntent().getIntExtra("month",0)+1)));
+        outState.putString("day", String.valueOf(getIntent().getIntExtra("day", 0)));
+
+        outState.putParcelableArrayList("noteList", noteList);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        year = savedInstanceState.getString("year");
+        month = savedInstanceState.getString("month");
+        day = savedInstanceState.getString("day");
+
+        carbs_current = savedInstanceState.getString("carbs_current");
+        carbs_max = savedInstanceState.getString("carbs_max");
+        carbs_percents = savedInstanceState.getString("carbs_percent");
+        carbs_remains = savedInstanceState.getString("carbs_remain");
+
+        protein_current = savedInstanceState.getString("protein_current");
+        protein_max = savedInstanceState.getString("protein_max");
+        protein_percents = savedInstanceState.getString("protein_percent");
+        protein_remains = savedInstanceState.getString("protein_remain");
+
+        fat_current = savedInstanceState.getString("fat_current");
+        fat_max = savedInstanceState.getString("fat_max");
+        fat_percents = savedInstanceState.getString("fat_percent");
+        fat_remains = savedInstanceState.getString("fat_remain");
+
+        calorie_max = savedInstanceState.getString("calorie_max");
+        calorie_percents = savedInstanceState.getString("calorie_percent");
+
+        noteList = savedInstanceState.getParcelableArrayList("noteList");
+        RecyclerView recyclerView = findViewById(R.id.notesRecycler);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        macrosNotesAdapter = new MacrosNotesAdapter(context, noteList);
+        recyclerView.setAdapter(macrosNotesAdapter);
+
+        TextView dates = findViewById(R.id.date);
+        dates.setText(day+"/"+month+"/"+year);
+
+        TextView calorie_val = findViewById(R.id.calorie_value);
+        TextView calorie_percent = findViewById(R.id.calorie_percent);
+        calorie_val.setText(calorie_max);
+        calorie_percent.setText(calorie_percents+"%");
+
+        TextView protein_currents = findViewById(R.id.protein_remain);
+        TextView protein_perc = findViewById(R.id.protein_percent);
+        TextView protein_maxs = findViewById(R.id.protein_target);
+        TextView protein_rem = findViewById(R.id.protein_current);
+        protein_currents.setText(protein_current);
+        protein_perc.setText(protein_percents+"%");
+        protein_maxs.setText(protein_max);
+        protein_rem.setText(protein_remains);
+
+        TextView carbs_currents = findViewById(R.id.carbs_remain);
+        TextView carbs_perc = findViewById(R.id.carbs_percent);
+        TextView carbs_maxs = findViewById(R.id.carbs_target);
+        TextView carbs_rem = findViewById(R.id.carbs_current);
+        carbs_currents.setText(carbs_current);
+        carbs_perc.setText(carbs_percents+"%");
+        carbs_maxs.setText(carbs_max);
+        carbs_rem.setText(carbs_remains);
+
+        TextView fat_currents = findViewById(R.id.fat_remain);
+        TextView fat_perc = findViewById(R.id.fat_percent);
+        TextView fat_maxs = findViewById(R.id.fat_target);
+        TextView fat_rem = findViewById(R.id.fat_current);
+        fat_currents.setText(fat_current);
+        fat_perc.setText(fat_percents+"%");
+        fat_maxs.setText(fat_max);
+        fat_rem.setText(fat_remains);
+
+        setupMacroInputListener();
+
     }
 
     public void resetNav(){

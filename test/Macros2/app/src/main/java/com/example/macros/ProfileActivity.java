@@ -145,10 +145,6 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         return true;
     }
 
-    public void profileImageHandler(View view){
-        Toast.makeText(this, "profileImage", Toast.LENGTH_SHORT).show();
-    }
-
     public void backImageHandler(View view){
         onBackPressed();
     }

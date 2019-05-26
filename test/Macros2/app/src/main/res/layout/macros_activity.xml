@@ -34,7 +34,6 @@
                     android:background="@color/background_black"
                     android:gravity="end"
                     android:padding="@dimen/sixteen_dp"
-                    android:text="@string/temp_date"
                     android:textColor="@color/white" />
 
                 <android.support.v7.widget.RecyclerView

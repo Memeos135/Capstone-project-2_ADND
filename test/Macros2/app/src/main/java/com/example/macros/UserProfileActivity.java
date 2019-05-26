@@ -3,6 +3,7 @@ package com.example.macros;
 import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -39,6 +40,17 @@ import java.util.Calendar;
 public class UserProfileActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     boolean baseFlag = false;
+    String number = "";
+    String counterBase = "";
+
+    String imageURI;
+    String username;
+
+    String prot_perc;
+    String carb_perc;
+    String fat_perc;
+
+    String userStatus = "";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,13 +68,34 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        loadUserInfo();
-        readFriendsCount();
+        if(savedInstanceState == null) {
+            loadUserInfo();
+            readFriendsCount();
 
-        if(FirebaseAuth.getInstance().getCurrentUser()!=null){
-            readTodayMacros();
-            removeGradient();
+            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                readTodayMacros();
+                removeGradient();
+            }
         }
+    }
+
+    public void fetchNumber(){
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(getIntent().getStringExtra("uID"))
+                .child("userCreds").child("mobileNumber");
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    number = dataSnapshot.getValue().toString();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     public void readFriendsCount(){
@@ -80,6 +113,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
                         counter++;
                     }
                     friend_count.setText(String.valueOf(counter));
+                    counterBase = String.valueOf(counter);
                 }
             }
 
@@ -227,6 +261,10 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         carbs_percent.setText((int)carbsVal+"%");
         fat_percent.setText((int)fatVal+"%");
 
+        prot_perc = String.valueOf((int) proteinVal);
+        carb_perc = String.valueOf((int) carbsVal);
+        fat_perc = String.valueOf((int) fatVal);
+
         checkIfUserIsSame();
     }
 
@@ -235,6 +273,8 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         if(!FirebaseAuth.getInstance().getCurrentUser().getUid().equals(getIntent().getStringExtra("uID"))) {
             Log.i("XXX", "passed NOT SAME USER");
             checkIfUserIsFriend();
+        }else{
+            userStatus = "same user";
         }
     }
 
@@ -255,6 +295,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
                     }
                     if(flag[0]){
                         showSentRequest();
+                        userStatus = "request sent";
                     }else{
                         Log.i("XXX", "passed not in REQUESTS");
                         checkPending();
@@ -289,6 +330,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
                     }
                     if(pendingFlag[0]){
                         showPending();
+                        userStatus = "pending";
                     }else{
                         Log.i("XXX", "passed not in PENDING");
                         showAddFriend();
@@ -409,6 +451,8 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
                         Log.i("XXX", "passed NOT FRIENDS");
                         checkRequests();
                     }else{
+                        userStatus = "friend";
+                        fetchNumber();
                         showFab();
                     }
                 }else{
@@ -435,9 +479,11 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
                     for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
                         if(dataSnapshot1.getKey().equals("profile_picture")) {
                             ImageView photo = findViewById(R.id.send_image);
+                            imageURI = dataSnapshot1.getValue().toString();
                             Picasso.get().load(dataSnapshot1.getValue().toString()).centerCrop().fit().into(photo);
                         }else if(dataSnapshot1.getKey().equals("name")){
                             TextView name = findViewById(R.id.user_name);
+                            username = dataSnapshot1.getValue().toString();
                             name.setText(dataSnapshot1.getValue().toString());
                         }
                     }
@@ -506,7 +552,75 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
     }
 
     public void chatFabHandler(View view){
-        startActivity(new Intent(this, SpecificChatActivity.class));
+        // launch whatsapp for a specific number based on the selected user - if user does not exist in contact list, invite through SMS
+        Uri uri = Uri.parse("smsto: " + number);
+        Intent i = new Intent(Intent.ACTION_SENDTO, uri);
+        i.setPackage("com.whatsapp");
+        startActivity(i);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString("protein_percent", prot_perc);
+        outState.putString("carbs_percent", carb_perc);
+        outState.putString("fat_percent", fat_perc);
+        outState.putString("mobile_number", number);
+        outState.putString("counter", counterBase);
+        outState.putString("name", username);
+        outState.putString("photo", imageURI);
+
+        outState.putString("status", userStatus);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        userStatus = savedInstanceState.getString("status");
+
+        username = savedInstanceState.getString("name");
+        imageURI = savedInstanceState.getString("photo");
+
+        number = savedInstanceState.getString("mobile_number");
+        counterBase = savedInstanceState.getString("counter");
+
+        prot_perc = savedInstanceState.getString("protein_percent");
+        carb_perc = savedInstanceState.getString("carbs_percent");
+        fat_perc = savedInstanceState.getString("fat_percent");
+
+        if(userStatus.equals("pending")){
+            showPending();
+        }else if(userStatus.equals("request sent")){
+            showSentRequest();
+        }else if(userStatus.equals("friend")){
+            showFab();
+        }else if(userStatus.equals("same user")){
+            // do nothing
+        }else{
+            showAddFriend();
+        }
+
+        if(FirebaseAuth.getInstance().getCurrentUser() != null){
+            removeGradient();
+        }
+
+        TextView name = findViewById(R.id.user_name);
+        ImageView photo = findViewById(R.id.send_image);
+        TextView friends = findViewById(R.id.followers_val);
+
+        TextView proteinRemain = findViewById(R.id.protein_remain);
+        TextView carbsRemain = findViewById(R.id.carbs_remain);
+        TextView fatRemain = findViewById(R.id.fat_remain);
+
+        name.setText(username);
+        friends.setText(counterBase);
+        Picasso.get().load(Uri.parse(imageURI)).centerCrop().fit().into(photo);
+
+        proteinRemain.setText(prot_perc+"%");
+        carbsRemain.setText(carb_perc+"%");
+        fatRemain.setText(fat_perc+"%");
     }
 
     @Override
