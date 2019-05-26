@@ -28,7 +28,7 @@
         app:layout_constraintTop_toBottomOf="@+id/back_image">
 
         <ImageView
-            android:id="@+id/send_image"
+            android:id="@+id/nav_image"
             android:layout_width="@dimen/one_hundred_dp"
             android:layout_height="@dimen/one_hundred_dp"
             android:layout_gravity="center"
@@ -37,7 +37,7 @@
     </android.support.v7.widget.CardView>
 
     <TextView
-        android:id="@+id/user_name"
+        android:id="@+id/nav_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
@@ -46,8 +46,8 @@
         android:textColor="@android:color/white" />
 
     <TextView
-        android:id="@+id/user_email"
-        android:layout_width="wrap_content"
+        android:id="@+id/nav_email"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/author"
         android:textColor="@color/light_grey" />

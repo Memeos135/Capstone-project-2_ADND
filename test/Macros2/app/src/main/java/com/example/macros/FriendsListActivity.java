@@ -2,6 +2,7 @@ package com.example.macros;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -25,6 +26,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -37,11 +39,9 @@ public class FriendsListActivity extends AppCompatActivity implements Navigation
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.friends_list_activity);
+        setContentView(R.layout.activity_friend_list);
 
         context = this;
-
-        setupRecycler();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
@@ -53,6 +53,11 @@ public class FriendsListActivity extends AppCompatActivity implements Navigation
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        if(FirebaseAuth.getInstance().getCurrentUser()!=null){
+            setupRecycler();
+            fetchUserBrief();
+        }
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -177,24 +182,81 @@ public class FriendsListActivity extends AppCompatActivity implements Navigation
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putParcelableArrayList("friendList", friendList);
+        if(FirebaseAuth.getInstance().getCurrentUser()!=null) {
+            outState.putParcelableArrayList("friendList", friendList);
+        }
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
 
-        friendList = savedInstanceState.getParcelableArrayList("friendList");
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        friendListRecyclerAdapter = new FriendListRecyclerAdapter(context, friendList);
-        recyclerView.setAdapter(friendListRecyclerAdapter);
+        if(FirebaseAuth.getInstance().getCurrentUser()!=null) {
+            friendList = savedInstanceState.getParcelableArrayList("friendList");
+            RecyclerView recyclerView = findViewById(R.id.recyclerView);
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            friendListRecyclerAdapter = new FriendListRecyclerAdapter(context, friendList);
+            recyclerView.setAdapter(friendListRecyclerAdapter);
+        }
+    }
+
+    public void fetchUserBrief(){
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("userCreds");
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
+                        if(dataSnapshot1.getKey().equals("name")){
+
+                            TextView name = findViewById(R.id.nav_name);
+                            name.setText(dataSnapshot1.getValue().toString());
+                        }else if(dataSnapshot1.getKey().equals("profile_picture")){
+
+                            ImageView photo = findViewById(R.id.nav_image);
+                            Picasso.get().load(Uri.parse(dataSnapshot1.getValue().toString())).centerCrop().fit().into(photo);
+
+                        }else if(dataSnapshot1.getKey().equals("email")){
+
+                            TextView email = findViewById(R.id.nav_email);
+                            email.setText(dataSnapshot1.getValue().toString());
+
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(FirebaseAuth.getInstance().getCurrentUser()!=null){
+            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+            navigationView.getMenu().clear();
+            navigationView.inflateMenu(R.menu.logged_drawer);
+
+            fetchUserBrief();
+
+        }else{
+            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+            navigationView.getMenu().clear();
+            navigationView.inflateMenu(R.menu.activity_main_drawer);
+        }
     }
 
     public void resetNav(){
-        TextView name = findViewById(R.id.user_name);
-        TextView email = findViewById(R.id.user_email);
-        ImageView photo = findViewById(R.id.send_image);
+        TextView name = findViewById(R.id.nav_name);
+        TextView email = findViewById(R.id.nav_email);
+        ImageView photo = findViewById(R.id.nav_image);
 
         name.setText(R.string.user_name);
         email.setText(R.string.example_email);

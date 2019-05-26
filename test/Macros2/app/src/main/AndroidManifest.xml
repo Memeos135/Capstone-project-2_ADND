@@ -24,8 +24,7 @@
 
         <activity
             android:name=".MainActivity"
-            android:launchMode="singleTask"
-            android:configChanges="orientation|screenSize">
+            android:launchMode="singleTask">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,7 +35,8 @@
         <activity
             android:name=".SignupActivity"
             android:theme="@style/AppTheme"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".LoginActivity"
             android:theme="@style/AppTheme"

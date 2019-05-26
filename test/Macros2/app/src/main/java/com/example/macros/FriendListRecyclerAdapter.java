@@ -37,7 +37,7 @@ public class FriendListRecyclerAdapter extends RecyclerView.Adapter<FriendListRe
 
     @Override
     public MyViewHolder onCreateViewHolder( ViewGroup viewGroup, int i) {
-        View view = mInflater.inflate(R.layout.friend_list_card, viewGroup, false);
+        View view = mInflater.inflate(R.layout.activity_friend_list_card, viewGroup, false);
         return new MyViewHolder(view);
     }
 

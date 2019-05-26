@@ -23,8 +23,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-import static com.example.macros.ProfileActivity.flag;
-
 public class PendingAdapter extends RecyclerView.Adapter<PendingAdapter.MyViewHolder> {
 
     private ArrayList<PendingInfo> pendingInfo;
@@ -38,7 +36,7 @@ public class PendingAdapter extends RecyclerView.Adapter<PendingAdapter.MyViewHo
 
     @Override
     public MyViewHolder onCreateViewHolder( ViewGroup viewGroup, int i) {
-        View view = mInflater.inflate(R.layout.pending_activity_card, viewGroup, false);
+        View view = mInflater.inflate(R.layout.activity_pending_card, viewGroup, false);
         return new MyViewHolder(view);
     }
 

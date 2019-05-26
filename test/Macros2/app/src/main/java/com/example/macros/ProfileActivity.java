@@ -37,7 +37,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.profile_activity);
+        setContentView(R.layout.activity_profile);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         if (savedInstanceState == null) {
@@ -216,9 +216,9 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
     }
 
     public void resetNav(){
-        TextView name = findViewById(R.id.user_name);
-        TextView email = findViewById(R.id.user_email);
-        ImageView photo = findViewById(R.id.send_image);
+        TextView name = findViewById(R.id.nav_name);
+        TextView email = findViewById(R.id.nav_email);
+        ImageView photo = findViewById(R.id.nav_image);
 
         name.setText(R.string.user_name);
         email.setText(R.string.example_email);

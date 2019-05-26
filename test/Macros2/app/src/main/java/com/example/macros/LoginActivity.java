@@ -27,7 +27,7 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login_activity);
+        setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -50,10 +50,6 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        if(FirebaseAuth.getInstance().getCurrentUser()!=null){
-            navigationView.getMenu().clear();
-            navigationView.inflateMenu(R.menu.logged_drawer);
-        }
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -80,16 +76,9 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
 
         } else if (id == R.id.pending) {
 
-            Toast.makeText(this, "Pending", Toast.LENGTH_SHORT).show();
 
         } else if (id == R.id.signout) {
 
-            FirebaseAuth.getInstance().signOut();
-            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-            navigationView.getMenu().clear();
-            navigationView.inflateMenu(R.menu.activity_main_drawer);
-
-            resetNav();
 
         } else if (id == R.id.home) {
 
@@ -114,7 +103,7 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()){
                         startActivity(new Intent(getApplicationContext(), MainActivity.class)
-                        .putExtra("login", "login"));
+                        .putExtra("flag", "login"));
                     }else{
                         Toast.makeText(LoginActivity.this, "Authentication Failed", Toast.LENGTH_SHORT).show();
                     }
@@ -125,30 +114,5 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
 
     public void backImageHandler(View view){
         onBackPressed();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if(FirebaseAuth.getInstance().getCurrentUser()!=null){
-            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-            navigationView.getMenu().clear();
-            navigationView.inflateMenu(R.menu.logged_drawer);
-        }else{
-            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-            navigationView.getMenu().clear();
-            navigationView.inflateMenu(R.menu.activity_main_drawer);
-        }
-    }
-
-    public void resetNav(){
-        TextView name = findViewById(R.id.user_name);
-        TextView email = findViewById(R.id.user_email);
-        ImageView photo = findViewById(R.id.send_image);
-
-        name.setText(R.string.user_name);
-        email.setText(R.string.example_email);
-        photo.setImageResource(R.drawable.ic_person_black_24dp);
     }
 }

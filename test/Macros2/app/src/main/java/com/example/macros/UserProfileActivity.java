@@ -55,7 +55,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.user_profile_activity);
+        setContentView(R.layout.activity_user_profile);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
@@ -68,15 +68,51 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        if(savedInstanceState == null) {
-            loadUserInfo();
-            readFriendsCount();
+        readFriendsCount();
+        fetchUserBrief();
 
+        if(savedInstanceState == null) {
             if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                fetchSelfData();
                 readTodayMacros();
                 removeGradient();
             }
         }
+    }
+
+    public void fetchSelfData(){
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("userCreds");
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
+                        if(dataSnapshot1.getKey().equals("name")){
+
+                            TextView name = findViewById(R.id.nav_name);
+                            name.setText(dataSnapshot1.getValue().toString());
+                        }else if(dataSnapshot1.getKey().equals("profile_picture")){
+
+                            ImageView photo = findViewById(R.id.nav_image);
+                            Picasso.get().load(Uri.parse(dataSnapshot1.getValue().toString())).centerCrop().fit().into(photo);
+
+                        }else if(dataSnapshot1.getKey().equals("email")){
+
+                            TextView email = findViewById(R.id.nav_email);
+                            email.setText(dataSnapshot1.getValue().toString());
+
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     public void fetchNumber(){
@@ -468,23 +504,26 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         });
     }
 
-    public void loadUserInfo(){
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(getIntent().getStringExtra("uID"))
-                .child("userCreds");
+    public void fetchUserBrief(){
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users")
+                .child(getIntent().getStringExtra("uID")).child("userCreds");
 
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
                     for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
-                        if(dataSnapshot1.getKey().equals("profile_picture")) {
-                            ImageView photo = findViewById(R.id.send_image);
-                            imageURI = dataSnapshot1.getValue().toString();
-                            Picasso.get().load(dataSnapshot1.getValue().toString()).centerCrop().fit().into(photo);
-                        }else if(dataSnapshot1.getKey().equals("name")){
+                        if(dataSnapshot1.getKey().equals("name")){
+
                             TextView name = findViewById(R.id.user_name);
-                            username = dataSnapshot1.getValue().toString();
                             name.setText(dataSnapshot1.getValue().toString());
+
+                        }else if(dataSnapshot1.getKey().equals("profile_picture")){
+
+                            ImageView photo = findViewById(R.id.send_image);
+                            Picasso.get().load(Uri.parse(dataSnapshot1.getValue().toString())).centerCrop().fit().into(photo);
+                            imageURI = dataSnapshot1.getValue().toString();
+
                         }
                     }
                 }
@@ -639,9 +678,9 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
     }
 
     public void resetNav(){
-        TextView name = findViewById(R.id.user_name);
-        TextView email = findViewById(R.id.user_email);
-        ImageView photo = findViewById(R.id.send_image);
+        TextView name = findViewById(R.id.nav_name);
+        TextView email = findViewById(R.id.nav_email);
+        ImageView photo = findViewById(R.id.nav_image);
 
         name.setText(R.string.user_name);
         email.setText(R.string.example_email);

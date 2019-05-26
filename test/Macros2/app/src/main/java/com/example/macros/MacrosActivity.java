@@ -3,6 +3,7 @@ package com.example.macros;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -35,6 +36,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -65,10 +67,14 @@ public class MacrosActivity extends AppCompatActivity implements NavigationView.
     String fat_max;
     String fat_remains;
 
+    String navName;
+    String navImage;
+    String navEmail;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.macros_activity);
+        setContentView(R.layout.activity_macros);
 
         context = this;
 
@@ -87,15 +93,52 @@ public class MacrosActivity extends AppCompatActivity implements NavigationView.
             if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                 noteList = new ArrayList<>();
 
-                navigationView.getMenu().clear();
-                navigationView.inflateMenu(R.menu.logged_drawer);
-
+                fetchUserBrief();
                 setupDate();
                 setupNotesRecycler();
                 setupMacroInputListener();
                 setupTargetTexts();
             }
         }
+    }
+
+    public void fetchUserBrief(){
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("userCreds");
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
+                        if(dataSnapshot1.getKey().equals("name")){
+
+                            TextView name = findViewById(R.id.nav_name);
+                            name.setText(dataSnapshot1.getValue().toString());
+                            navName = dataSnapshot1.getValue().toString();
+
+                        }else if(dataSnapshot1.getKey().equals("profile_picture")){
+
+                            ImageView photo = findViewById(R.id.nav_image);
+                            Picasso.get().load(Uri.parse(dataSnapshot1.getValue().toString())).centerCrop().fit().into(photo);
+                            navImage = dataSnapshot1.getValue().toString();
+
+                        }else if(dataSnapshot1.getKey().equals("email")){
+
+                            TextView email = findViewById(R.id.nav_email);
+                            email.setText(dataSnapshot1.getValue().toString());
+                            navEmail = dataSnapshot1.getValue().toString();
+
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     public void setupCalories(String protein, String carb, String fat, int protein_max, int carb_max, int fat_max){
@@ -339,19 +382,22 @@ public class MacrosActivity extends AppCompatActivity implements NavigationView.
 
     public void fabHandler(View view){
 
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.notes_dialog);
-        dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        dialog.setCancelable(true);
+        if(FirebaseAuth.getInstance().getCurrentUser()!=null) {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            dialog.create();
+            final Dialog dialog = new Dialog(context);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.notes_dialog);
+            dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            dialog.setCancelable(true);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                dialog.create();
+            }
+            dialog.show();
+
+            setupDialogListener(dialog);
         }
-        dialog.show();
-
-        setupDialogListener(dialog);
     }
 
     public void setupDialogListener(Dialog dialog){
@@ -451,18 +497,20 @@ public class MacrosActivity extends AppCompatActivity implements NavigationView.
     public void targetHandler(View view){
         TextView target = (TextView) view;
 
-        if(target.getTag().equals("carb_target")){
+        if(FirebaseAuth.getInstance().getCurrentUser()!=null) {
+            if (target.getTag().equals("carb_target")) {
 
-            showTargetDialog("carbs");
+                showTargetDialog("carbs");
 
-        }else if(target.getTag().equals("protein_target")){
+            } else if (target.getTag().equals("protein_target")) {
 
-            showTargetDialog("protein");
+                showTargetDialog("protein");
 
-        }else{
+            } else {
 
-            showTargetDialog("fats");
+                showTargetDialog("fats");
 
+            }
         }
     }
 
@@ -655,6 +703,9 @@ public class MacrosActivity extends AppCompatActivity implements NavigationView.
             NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
             navigationView.getMenu().clear();
             navigationView.inflateMenu(R.menu.logged_drawer);
+
+            fetchUserBrief();
+
         }else{
             NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
             navigationView.getMenu().clear();
@@ -666,29 +717,36 @@ public class MacrosActivity extends AppCompatActivity implements NavigationView.
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putString("protein_current", protein_current);
-        outState.putString("protein_max", protein_max);
-        outState.putString("protein_percent", protein_percents);
-        outState.putString("protein_remain", protein_remains);
-
-        outState.putString("carbs_current", carbs_current);
-        outState.putString("carbs_max", carbs_max);
-        outState.putString("carbs_percent", carbs_percents);
-        outState.putString("carbs_remain", carbs_remains);
-
-        outState.putString("fat_current", fat_current);
-        outState.putString("fat_max", fat_max);
-        outState.putString("fat_percent", fat_percents);
-        outState.putString("fat_remain", fat_remains);
-
-        outState.putString("calorie_max", calorie_max);
-        outState.putString("calorie_percent", calorie_percents);
-
-        outState.putString("year", String.valueOf(getIntent().getIntExtra("year",0)));
-        outState.putString("month", String.valueOf((getIntent().getIntExtra("month",0)+1)));
+        outState.putString("year", String.valueOf(getIntent().getIntExtra("year", 0)));
+        outState.putString("month", String.valueOf((getIntent().getIntExtra("month", 0) + 1)));
         outState.putString("day", String.valueOf(getIntent().getIntExtra("day", 0)));
 
-        outState.putParcelableArrayList("noteList", noteList);
+        if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+
+            outState.putString("protein_current", protein_current);
+            outState.putString("protein_max", protein_max);
+            outState.putString("protein_percent", protein_percents);
+            outState.putString("protein_remain", protein_remains);
+
+            outState.putString("carbs_current", carbs_current);
+            outState.putString("carbs_max", carbs_max);
+            outState.putString("carbs_percent", carbs_percents);
+            outState.putString("carbs_remain", carbs_remains);
+
+            outState.putString("fat_current", fat_current);
+            outState.putString("fat_max", fat_max);
+            outState.putString("fat_percent", fat_percents);
+            outState.putString("fat_remain", fat_remains);
+
+            outState.putString("calorie_max", calorie_max);
+            outState.putString("calorie_percent", calorie_percents);
+
+            outState.putParcelableArrayList("noteList", noteList);
+
+            outState.putString("navImage", navImage);
+            outState.putString("navName", navName);
+            outState.putString("navEmail", navEmail);
+        }
     }
 
     @Override
@@ -699,73 +757,81 @@ public class MacrosActivity extends AppCompatActivity implements NavigationView.
         month = savedInstanceState.getString("month");
         day = savedInstanceState.getString("day");
 
-        carbs_current = savedInstanceState.getString("carbs_current");
-        carbs_max = savedInstanceState.getString("carbs_max");
-        carbs_percents = savedInstanceState.getString("carbs_percent");
-        carbs_remains = savedInstanceState.getString("carbs_remain");
-
-        protein_current = savedInstanceState.getString("protein_current");
-        protein_max = savedInstanceState.getString("protein_max");
-        protein_percents = savedInstanceState.getString("protein_percent");
-        protein_remains = savedInstanceState.getString("protein_remain");
-
-        fat_current = savedInstanceState.getString("fat_current");
-        fat_max = savedInstanceState.getString("fat_max");
-        fat_percents = savedInstanceState.getString("fat_percent");
-        fat_remains = savedInstanceState.getString("fat_remain");
-
-        calorie_max = savedInstanceState.getString("calorie_max");
-        calorie_percents = savedInstanceState.getString("calorie_percent");
-
-        noteList = savedInstanceState.getParcelableArrayList("noteList");
-        RecyclerView recyclerView = findViewById(R.id.notesRecycler);
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        macrosNotesAdapter = new MacrosNotesAdapter(context, noteList);
-        recyclerView.setAdapter(macrosNotesAdapter);
-
         TextView dates = findViewById(R.id.date);
-        dates.setText(day+"/"+month+"/"+year);
+        dates.setText(day + "/" + month + "/" + year);
 
-        TextView calorie_val = findViewById(R.id.calorie_value);
-        TextView calorie_percent = findViewById(R.id.calorie_percent);
-        calorie_val.setText(calorie_max);
-        calorie_percent.setText(calorie_percents+"%");
+        if(FirebaseAuth.getInstance().getCurrentUser()!= null) {
 
-        TextView protein_currents = findViewById(R.id.protein_remain);
-        TextView protein_perc = findViewById(R.id.protein_percent);
-        TextView protein_maxs = findViewById(R.id.protein_target);
-        TextView protein_rem = findViewById(R.id.protein_current);
-        protein_currents.setText(protein_current);
-        protein_perc.setText(protein_percents+"%");
-        protein_maxs.setText(protein_max);
-        protein_rem.setText(protein_remains);
+            carbs_current = savedInstanceState.getString("carbs_current");
+            carbs_max = savedInstanceState.getString("carbs_max");
+            carbs_percents = savedInstanceState.getString("carbs_percent");
+            carbs_remains = savedInstanceState.getString("carbs_remain");
 
-        TextView carbs_currents = findViewById(R.id.carbs_remain);
-        TextView carbs_perc = findViewById(R.id.carbs_percent);
-        TextView carbs_maxs = findViewById(R.id.carbs_target);
-        TextView carbs_rem = findViewById(R.id.carbs_current);
-        carbs_currents.setText(carbs_current);
-        carbs_perc.setText(carbs_percents+"%");
-        carbs_maxs.setText(carbs_max);
-        carbs_rem.setText(carbs_remains);
+            protein_current = savedInstanceState.getString("protein_current");
+            protein_max = savedInstanceState.getString("protein_max");
+            protein_percents = savedInstanceState.getString("protein_percent");
+            protein_remains = savedInstanceState.getString("protein_remain");
 
-        TextView fat_currents = findViewById(R.id.fat_remain);
-        TextView fat_perc = findViewById(R.id.fat_percent);
-        TextView fat_maxs = findViewById(R.id.fat_target);
-        TextView fat_rem = findViewById(R.id.fat_current);
-        fat_currents.setText(fat_current);
-        fat_perc.setText(fat_percents+"%");
-        fat_maxs.setText(fat_max);
-        fat_rem.setText(fat_remains);
+            fat_current = savedInstanceState.getString("fat_current");
+            fat_max = savedInstanceState.getString("fat_max");
+            fat_percents = savedInstanceState.getString("fat_percent");
+            fat_remains = savedInstanceState.getString("fat_remain");
 
-        setupMacroInputListener();
+            calorie_max = savedInstanceState.getString("calorie_max");
+            calorie_percents = savedInstanceState.getString("calorie_percent");
+
+            navEmail = savedInstanceState.getString("navEmail");
+            navName = savedInstanceState.getString("navName");
+            navImage = savedInstanceState.getString("navImage");
+
+            noteList = savedInstanceState.getParcelableArrayList("noteList");
+            RecyclerView recyclerView = findViewById(R.id.notesRecycler);
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            macrosNotesAdapter = new MacrosNotesAdapter(context, noteList);
+            recyclerView.setAdapter(macrosNotesAdapter);
+
+            TextView calorie_val = findViewById(R.id.calorie_value);
+            TextView calorie_percent = findViewById(R.id.calorie_percent);
+            calorie_val.setText(calorie_max);
+            calorie_percent.setText(calorie_percents + "%");
+
+            TextView protein_currents = findViewById(R.id.protein_remain);
+            TextView protein_perc = findViewById(R.id.protein_percent);
+            TextView protein_maxs = findViewById(R.id.protein_target);
+            TextView protein_rem = findViewById(R.id.protein_current);
+            protein_currents.setText(protein_current);
+            protein_perc.setText(protein_percents + "%");
+            protein_maxs.setText(protein_max);
+            protein_rem.setText(protein_remains);
+
+            TextView carbs_currents = findViewById(R.id.carbs_remain);
+            TextView carbs_perc = findViewById(R.id.carbs_percent);
+            TextView carbs_maxs = findViewById(R.id.carbs_target);
+            TextView carbs_rem = findViewById(R.id.carbs_current);
+            carbs_currents.setText(carbs_current);
+            carbs_perc.setText(carbs_percents + "%");
+            carbs_maxs.setText(carbs_max);
+            carbs_rem.setText(carbs_remains);
+
+            TextView fat_currents = findViewById(R.id.fat_remain);
+            TextView fat_perc = findViewById(R.id.fat_percent);
+            TextView fat_maxs = findViewById(R.id.fat_target);
+            TextView fat_rem = findViewById(R.id.fat_current);
+            fat_currents.setText(fat_current);
+            fat_perc.setText(fat_percents + "%");
+            fat_maxs.setText(fat_max);
+            fat_rem.setText(fat_remains);
+
+            setupMacroInputListener();
+
+        }
 
     }
 
     public void resetNav(){
-        TextView name = findViewById(R.id.user_name);
-        TextView email = findViewById(R.id.user_email);
-        ImageView photo = findViewById(R.id.send_image);
+        TextView name = findViewById(R.id.nav_name);
+        TextView email = findViewById(R.id.nav_email);
+        ImageView photo = findViewById(R.id.nav_image);
 
         name.setText(R.string.user_name);
         email.setText(R.string.example_email);

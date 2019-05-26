@@ -55,7 +55,6 @@ public class SignupActivity extends AppCompatActivity implements NavigationView.
     private Uri selectedImage;
     private FirebaseAuth mAuth;
     private StorageReference storageReference;
-    private DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +62,6 @@ public class SignupActivity extends AppCompatActivity implements NavigationView.
         setContentView(R.layout.signup_activity_root);
         mAuth = FirebaseAuth.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
-        databaseReference = FirebaseDatabase.getInstance().getReference();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

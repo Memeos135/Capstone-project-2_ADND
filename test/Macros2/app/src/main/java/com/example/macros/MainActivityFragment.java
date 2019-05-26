@@ -30,7 +30,7 @@ public class MainActivityFragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.main_activity_fragment, container, false);
+        View view = inflater.inflate(R.layout.activity_main_fragment, container, false);
 
         if(FirebaseAuth.getInstance().getCurrentUser() != null) {
             setupRecycler(view);

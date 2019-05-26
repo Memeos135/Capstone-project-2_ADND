@@ -21,7 +21,7 @@ public class ProfileRecyclerAdapter extends RecyclerView.Adapter<ProfileRecycler
     }
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View view = mInflated.inflate(R.layout.profile_record_card, viewGroup, false);
+        View view = mInflated.inflate(R.layout.activity_profile_record_card, viewGroup, false);
         return new MyViewHolder(view);
     }
 

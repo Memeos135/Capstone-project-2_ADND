@@ -3,7 +3,6 @@ package com.example.macros;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +30,7 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View view = mInflater.inflate(R.layout.main_activity_recycler_card, viewGroup, false);
+        View view = mInflater.inflate(R.layout.activity_main_recycler_card, viewGroup, false);
         return new MyViewHolder(view);
     }
 

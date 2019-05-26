@@ -82,13 +82,9 @@ public class MainActivity extends AppCompatActivity
 
         navigationView.setNavigationItemSelectedListener(this);
 
-        // check if user is logged in
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            navigationView.getMenu().clear();
-            navigationView.inflateMenu(R.menu.logged_drawer);
-
-            fetchUserBrief();
+        if(FirebaseAuth.getInstance().getCurrentUser() != null) {
             readPending();
+            fetchUserBrief();
         }
     }
 
@@ -132,16 +128,16 @@ public class MainActivity extends AppCompatActivity
                     for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
                         if(dataSnapshot1.getKey().equals("name")){
 
-                            TextView name = findViewById(R.id.user_name);
+                            TextView name = findViewById(R.id.nav_name);
                             name.setText(dataSnapshot1.getValue().toString());
                         }else if(dataSnapshot1.getKey().equals("profile_picture")){
 
-                            ImageView photo = findViewById(R.id.send_image);
+                            ImageView photo = findViewById(R.id.nav_image);
                             Picasso.get().load(Uri.parse(dataSnapshot1.getValue().toString())).centerCrop().fit().into(photo);
 
                         }else if(dataSnapshot1.getKey().equals("email")){
 
-                            TextView email = findViewById(R.id.user_email);
+                            TextView email = findViewById(R.id.nav_email);
                             email.setText(dataSnapshot1.getValue().toString());
 
                         }
@@ -342,7 +338,7 @@ public class MainActivity extends AppCompatActivity
             navigationView.getMenu().clear();
             navigationView.inflateMenu(R.menu.logged_drawer);
 
-            readPending();
+            fetchUserBrief();
 
         }else{
 
@@ -355,9 +351,9 @@ public class MainActivity extends AppCompatActivity
 
     public void resetNav(){
 
-        TextView name = findViewById(R.id.user_name);
-        TextView email = findViewById(R.id.user_email);
-        ImageView photo = findViewById(R.id.send_image);
+        TextView name = findViewById(R.id.nav_name);
+        TextView email = findViewById(R.id.nav_email);
+        ImageView photo = findViewById(R.id.nav_image);
 
         name.setText(R.string.user_name);
         email.setText(R.string.example_email);
