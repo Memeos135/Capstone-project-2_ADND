@@ -179,7 +179,7 @@ public class MainActivity extends AppCompatActivity
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
                 if(keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
                     searchFlag = true;
-                    reloadList(search.getText().toString());
+                    reloadList(search.getText().toString(), dialog);
                     return true;
                 }
                 return false;
@@ -187,9 +187,9 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    public void reloadList(final String text){
+    public void reloadList(final String text, Dialog dialog){
 
-        final RecyclerView recyclerView = findViewById(R.id.searchRecycler);
+        final RecyclerView recyclerView = dialog.findViewById(R.id.searchRecycler);
 
         searchList.clear();
         recyclerView.getAdapter().notifyDataSetChanged();

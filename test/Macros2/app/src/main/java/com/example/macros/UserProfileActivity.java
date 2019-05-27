@@ -99,17 +99,21 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
                         if(dataSnapshot1.getKey().equals("name")){
 
                             TextView name = findViewById(R.id.nav_name);
-                            name.setText(dataSnapshot1.getValue().toString());
+                            if(name != null) {
+                                name.setText(dataSnapshot1.getValue().toString());
+                            }
                         }else if(dataSnapshot1.getKey().equals("profile_picture")){
 
                             ImageView photo = findViewById(R.id.nav_image);
-                            Picasso.get().load(Uri.parse(dataSnapshot1.getValue().toString())).centerCrop().fit().into(photo);
-
+                            if(photo!=null) {
+                                Picasso.get().load(Uri.parse(dataSnapshot1.getValue().toString())).centerCrop().fit().into(photo);
+                            }
                         }else if(dataSnapshot1.getKey().equals("email")){
 
                             TextView email = findViewById(R.id.nav_email);
-                            email.setText(dataSnapshot1.getValue().toString());
-
+                            if(email != null) {
+                                email.setText(dataSnapshot1.getValue().toString());
+                            }
                         }
                     }
                 }
@@ -611,6 +615,16 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
 
     public void backImageHandler(View view){
         onBackPressed();
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     public void chatFabHandler(View view){

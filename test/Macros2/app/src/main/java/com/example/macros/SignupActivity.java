@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -173,8 +174,8 @@ public class SignupActivity extends AppCompatActivity implements NavigationView.
                     }else {
                         if(mobileNumber.getText().toString().startsWith("0")){
                             Toast.makeText(this, "Please leave out the zero prefix - e.g 547171060 instead of 0547171060", Toast.LENGTH_SHORT).show();
-                        }else if(mobileNumber.getText().toString().length() > 9) {
-                            Toast.makeText(this, "Mobile numbers cannot exceed 9 digits, excluding the zero", Toast.LENGTH_SHORT).show();
+                        }else if(mobileNumber.getText().toString().length() > 9 || mobileNumber.getText().toString().length() < 9) {
+                            Toast.makeText(this, "Mobile numbers cannot exceed or be less than 9 digits, excluding the zero", Toast.LENGTH_SHORT).show();
                         }else{
                             fName = firstName.getText().toString();
                             this.email = email.getText().toString();
@@ -302,6 +303,7 @@ public class SignupActivity extends AppCompatActivity implements NavigationView.
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1);
+                ((RelativeLayout) findViewById(R.id.loadingPanel)).setVisibility(View.VISIBLE);
             }
         });
     }
@@ -316,9 +318,22 @@ public class SignupActivity extends AppCompatActivity implements NavigationView.
                 File file = new File(path);
                 selectedImage = Uri.fromFile(file);
                 ((ImageView) findViewById(R.id.send_image)).setImageResource(R.drawable.ic_check_red_24dp);
+                ((RelativeLayout) findViewById(R.id.loadingPanel)).setVisibility(View.GONE);
             }else{
                 selectedImage = data.getData();
-                Picasso.get().load(selectedImage).noPlaceholder().centerCrop().fit().into((ImageView) findViewById(R.id.send_image));
+                Picasso.get().load(selectedImage).noPlaceholder().centerCrop().fit().into((ImageView) findViewById(R.id.send_image), new com.squareup.picasso.Callback() {
+                    @Override
+                    public void onSuccess() {
+                        ((RelativeLayout) findViewById(R.id.loadingPanel)).setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        ((RelativeLayout) findViewById(R.id.loadingPanel)).setVisibility(View.GONE);
+                    }
+
+
+                });
             }
         }
     }
@@ -355,8 +370,27 @@ public class SignupActivity extends AppCompatActivity implements NavigationView.
             TransitionManager.go(Scene.getSceneForLayout((ViewGroup) findViewById(R.id.scene_root_two),
                     R.layout.signup_activity_root,
                     this));
+
+            imageListener();
+            TextView name = findViewById(R.id.name_input);
+            TextView email = findViewById(R.id.email_input);
+            TextView password = findViewById(R.id.password_input);
+            TextView passwordConf = findViewById(R.id.confpass_input);
+            TextView number = findViewById(R.id.phone_number);
+
+            name.setText(fName);
+            email.setText(this.email);
+            password.setText(this.password);
+            passwordConf.setText(confPassword);
+            number.setText(mobileNumber);
+
         }else {
-            super.onBackPressed();
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            if (drawer.isDrawerOpen(GravityCompat.START)) {
+                drawer.closeDrawer(GravityCompat.START);
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 
@@ -384,6 +418,8 @@ public class SignupActivity extends AppCompatActivity implements NavigationView.
             setupWidget();
         }
     }
+
+
 
     public void setupWidget(){
         Intent intent = new Intent(this, MacrosWidget.class);

@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('C:\\Users\\pc\\Desktop\\test\\Capstone-project-2_ADND\\test\\Macros2\\keystore.jks')
+            storePassword 'password'
+            keyAlias = 'udacity'
+            keyPassword 'password'
+        }
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.example.macros"
@@ -15,6 +23,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
         }
     }
 }

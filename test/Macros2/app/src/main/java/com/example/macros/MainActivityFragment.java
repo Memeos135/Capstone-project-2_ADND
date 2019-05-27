@@ -91,6 +91,8 @@ public class MainActivityFragment extends Fragment{
                     notesRecyclerAdapter = new NotesRecyclerAdapter(getContext(), notesList);
                     recyclerView.setAdapter(notesRecyclerAdapter);
                     ((RelativeLayout) getView().findViewById(R.id.loadingPanel)).setVisibility(View.GONE);
+                }else{
+                    ((RelativeLayout) getView().findViewById(R.id.loadingPanel)).setVisibility(View.GONE);
                 }
             }
 
