@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/lower_constraint"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/background_black">
+    android:layout_marginBottom="@dimen/forty_eight_dp">
 
     <ProgressBar
         android:id="@+id/fat_progress"
@@ -13,9 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/eight_dp"
         android:layout_marginEnd="@dimen/forty_eight_dp"
-        android:layout_marginBottom="@dimen/forty_eight_dp"
         android:theme="@style/progressBars"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/protein_label"
@@ -45,49 +43,6 @@
         app:layout_constraintTop_toBottomOf="@+id/carbs_label" />
 
     <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="@dimen/one_hundred_dp"
-        android:layout_height="@dimen/one_hundred_dp"
-        android:layout_marginStart="@dimen/eight_dp"
-        android:layout_marginTop="@dimen/forty_eight_dp"
-        android:layout_marginEnd="@dimen/eight_dp"
-        android:background="@drawable/circular_shape"
-        android:indeterminate="false"
-        android:progressDrawable="@drawable/circular_progress_bar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/calorie_value"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/sixteen_dp"
-        android:layout_marginEnd="@dimen/sixteen_dp"
-        android:layout_marginBottom="@dimen/sixteen_dp"
-        android:gravity="center"
-        android:textColor="@color/white"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/progressBar"
-        app:layout_constraintEnd_toEndOf="@+id/progressBar"
-        app:layout_constraintStart_toStartOf="@+id/progressBar"
-        app:layout_constraintTop_toTopOf="@+id/progressBar" />
-
-    <TextView
-        android:id="@+id/calorie_percent"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/eight_dp"
-        android:layout_marginEnd="@dimen/eight_dp"
-        android:gravity="center"
-        android:textColor="@color/light_blue"
-        app:layout_constraintEnd_toEndOf="@+id/calorie_value"
-        app:layout_constraintStart_toStartOf="@+id/calorie_value"
-        app:layout_constraintTop_toBottomOf="@+id/calorie_value" />
-
-    <ProgressBar
         android:id="@+id/protein_progress"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="0dp"
@@ -105,11 +60,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/forty_eight_dp"
-        android:layout_marginTop="@dimen/forty_eight_dp"
+        android:layout_marginTop="@dimen/sixty_four_dp"
         android:text="@string/protein"
         android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/progressBar" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/carbs_label"
@@ -125,68 +80,34 @@
         android:id="@+id/protein_remain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/grey"
+        android:textColor="@color/colorAccent"
         app:layout_constraintEnd_toEndOf="@+id/protein_progress"
         app:layout_constraintTop_toTopOf="@+id/protein_label" />
-
-    <TextView
-        android:id="@+id/protein_current"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toStartOf="@+id/protein_remain"
-        app:layout_constraintTop_toTopOf="@+id/protein_remain" />
 
     <TextView
         android:id="@+id/carbs_remain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/grey"
+        android:textColor="@color/colorAccent"
         app:layout_constraintEnd_toEndOf="@+id/carbs_progress"
         app:layout_constraintTop_toTopOf="@+id/carbs_label" />
-
-    <TextView
-        android:id="@+id/carbs_current"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toStartOf="@+id/carbs_remain"
-        app:layout_constraintTop_toTopOf="@+id/carbs_remain" />
 
     <TextView
         android:id="@+id/fat_remain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/grey"
+        android:textColor="@color/colorAccent"
         app:layout_constraintEnd_toEndOf="@+id/fat_progress"
         app:layout_constraintTop_toTopOf="@+id/fat_label" />
 
-    <TextView
-        android:id="@+id/fat_current"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toStartOf="@+id/fat_remain"
-        app:layout_constraintTop_toTopOf="@+id/fat_remain" />
-
-    <TextView
-        android:id="@+id/calorie_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/calories"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/progressBar"
-        app:layout_constraintStart_toStartOf="@+id/protein_label"
-        app:layout_constraintTop_toTopOf="@+id/progressBar" />
-
-    <TextView
-        android:id="@+id/date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/sixteen_dp"
-        android:layout_marginEnd="@dimen/sixteen_dp"
-        android:textColor="@color/white"
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/full_gradient" />
 
 </android.support.constraint.ConstraintLayout>

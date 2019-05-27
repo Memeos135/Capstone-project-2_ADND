@@ -1,8 +1,12 @@
 package com.example.macros;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -50,8 +55,10 @@ public class FriendListRecyclerAdapter extends RecyclerView.Adapter<FriendListRe
         myViewHolder.name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mInflater.getContext().startActivity(new Intent(mInflater.getContext(), UserProfileActivity.class)
-                .putExtra("uID", friendList.get(i).getId()));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    mInflater.getContext().startActivity(new Intent(mInflater.getContext(), UserProfileActivity.class)
+                    .putExtra("uID", friendList.get(i).getId()), ActivityOptions.makeSceneTransitionAnimation((Activity) mInflater.getContext()).toBundle());
+                }
             }
         });
 
@@ -95,11 +102,15 @@ public class FriendListRecyclerAdapter extends RecyclerView.Adapter<FriendListRe
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
-                    String number = dataSnapshot.getValue().toString();
-                    Uri uri = Uri.parse("smsto: " + number);
-                    Intent i = new Intent(Intent.ACTION_SENDTO, uri);
-                    i.setPackage("com.whatsapp");
-                    mInflater.getContext().startActivity(i);
+                    if(appInstalledOrNot("com.whatsapp")){
+                        String number = dataSnapshot.getValue().toString();
+                        Uri uri = Uri.parse("smsto: " + number);
+                        Intent i = new Intent(Intent.ACTION_SENDTO, uri);
+                        i.setPackage("com.whatsapp");
+                        mInflater.getContext().startActivity(i);
+                    }else{
+                        Toast.makeText(mInflater.getContext(), "WhatsApp is not installed", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 
@@ -165,5 +176,18 @@ public class FriendListRecyclerAdapter extends RecyclerView.Adapter<FriendListRe
             remove_friend = itemView.findViewById(R.id.remove_friend);
             chat = itemView.findViewById(R.id.chat_friend);
         }
+    }
+
+    private boolean appInstalledOrNot(String uri) {
+        PackageManager pm = mInflater.getContext().getPackageManager();
+        boolean app_installed;
+        try {
+            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+            app_installed = true;
+        }
+        catch (PackageManager.NameNotFoundException e) {
+            app_installed = false;
+        }
+        return app_installed;
     }
 }

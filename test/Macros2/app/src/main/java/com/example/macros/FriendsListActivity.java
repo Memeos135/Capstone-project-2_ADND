@@ -1,8 +1,12 @@
 package com.example.macros;
 
+import android.app.ActivityOptions;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -17,6 +21,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,6 +60,7 @@ public class FriendsListActivity extends AppCompatActivity implements Navigation
         navigationView.setNavigationItemSelectedListener(this);
 
         if(FirebaseAuth.getInstance().getCurrentUser()!=null){
+            ((RelativeLayout) findViewById(R.id.loadingPanel)).setVisibility(View.VISIBLE);
             setupRecycler();
             fetchUserBrief();
         }
@@ -68,23 +74,27 @@ public class FriendsListActivity extends AppCompatActivity implements Navigation
 
         if (id == R.id.profile) {
 
-            startActivity(new Intent(this, ProfileActivity.class));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                startActivity(new Intent(this, ProfileActivity.class), ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+            }
 
         } else if (id == R.id.signup) {
-            // Testing default activity enter/exit animation
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//                startActivity(new Intent(this, SignupActivity.class), ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
-//            }
 
-            startActivity(new Intent(this, SignupActivity.class));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                startActivity(new Intent(this, SignupActivity.class), ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+            }
 
         } else if (id == R.id.signin) {
 
-            startActivity(new Intent(this, LoginActivity.class));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                startActivity(new Intent(this, LoginActivity.class), ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+            }
 
         } else if (id == R.id.pending) {
 
-            Toast.makeText(this, "Pending", Toast.LENGTH_SHORT).show();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                startActivity(new Intent(this, PendingFriendsActivity.class), ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+            }
 
         } else if (id == R.id.signout) {
 
@@ -97,7 +107,7 @@ public class FriendsListActivity extends AppCompatActivity implements Navigation
 
         } else if (id == R.id.home) {
 
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            startActivity(new Intent(getApplicationContext(), MainActivity.class), ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -167,6 +177,7 @@ public class FriendsListActivity extends AppCompatActivity implements Navigation
                         }
                         friendListRecyclerAdapter = new FriendListRecyclerAdapter(context, friendInfos);
                         recyclerView.setAdapter(friendListRecyclerAdapter);
+                        ((RelativeLayout) findViewById(R.id.loadingPanel)).setVisibility(View.GONE);
                     }
                 }
 
@@ -261,5 +272,35 @@ public class FriendsListActivity extends AppCompatActivity implements Navigation
         name.setText(R.string.user_name);
         email.setText(R.string.example_email);
         photo.setImageResource(R.drawable.ic_person_black_24dp);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+            triggerWidget();
+            setupWidget();
+        }
+    }
+
+    public void setupWidget(){
+        Intent intent = new Intent(this, MacrosWidget.class);
+        intent.setAction("setBase");
+
+        int[] ids = AppWidgetManager.getInstance(getApplication())
+                .getAppWidgetIds(new ComponentName(getApplication(), MacrosWidget.class));
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        sendBroadcast(intent);
+    }
+
+    public void triggerWidget(){
+        Intent intent = new Intent(this, MacrosWidget.class);
+        intent.setAction("update");
+
+        int[] ids = AppWidgetManager.getInstance(getApplication())
+                .getAppWidgetIds(new ComponentName(getApplication(), MacrosWidget.class));
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        sendBroadcast(intent);
     }
 }

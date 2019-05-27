@@ -1,6 +1,9 @@
 package com.example.macros;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -10,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
+import android.widget.RelativeLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -33,6 +37,7 @@ public class MainActivityFragment extends Fragment{
         View view = inflater.inflate(R.layout.activity_main_fragment, container, false);
 
         if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+            ((RelativeLayout) view.findViewById(R.id.loadingPanel)).setVisibility(View.VISIBLE);
             setupRecycler(view);
         }
 
@@ -43,10 +48,12 @@ public class MainActivityFragment extends Fragment{
                 // i > year
                 // i1 > month
                 // i2 > day
-                startActivity(new Intent(getContext(), MacrosActivity.class)
-                .putExtra("day", i2)
-                .putExtra("month", i1)
-                .putExtra("year", i));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    startActivity(new Intent(getContext(), MacrosActivity.class)
+                    .putExtra("day", i2)
+                    .putExtra("month", i1)
+                    .putExtra("year", i), ActivityOptions.makeSceneTransitionAnimation((Activity) getContext()).toBundle());
+                }
             }
         });
 
@@ -83,6 +90,7 @@ public class MainActivityFragment extends Fragment{
                     }
                     notesRecyclerAdapter = new NotesRecyclerAdapter(getContext(), notesList);
                     recyclerView.setAdapter(notesRecyclerAdapter);
+                    ((RelativeLayout) getView().findViewById(R.id.loadingPanel)).setVisibility(View.GONE);
                 }
             }
 

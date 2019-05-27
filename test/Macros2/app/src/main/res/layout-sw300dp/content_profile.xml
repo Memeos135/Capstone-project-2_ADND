@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/const_two"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/one_dp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/radioGroup">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/const_one"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/background_black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/radioGroup">
+
+                <ProgressBar
+                    android:id="@+id/fat_progress"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/eight_dp"
+                    android:layout_marginEnd="@dimen/forty_eight_dp"
+                    android:layout_marginBottom="@dimen/forty_eight_dp"
+                    android:theme="@style/progressBars"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="@+id/protein_label"
+                    app:layout_constraintTop_toBottomOf="@+id/fat_label" />
+
+                <TextView
+                    android:id="@+id/fat_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/forty_eight_dp"
+                    android:text="@string/fat"
+                    android:textColor="@color/white"
+                    app:layout_constraintStart_toStartOf="@+id/protein_label"
+                    app:layout_constraintTop_toBottomOf="@+id/carbs_progress" />
+
+                <ProgressBar
+                    android:id="@+id/carbs_progress"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/eight_dp"
+                    android:layout_marginEnd="@dimen/forty_eight_dp"
+                    android:theme="@style/progressBars"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="@+id/protein_label"
+                    app:layout_constraintTop_toBottomOf="@+id/carbs_label" />
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="@dimen/one_hundred_dp"
+                    android:layout_height="@dimen/one_hundred_dp"
+                    android:layout_marginTop="@dimen/forty_eight_dp"
+                    android:background="@drawable/circular_shape"
+                    android:indeterminate="false"
+                    android:progressDrawable="@drawable/circular_progress_bar"
+                    app:layout_constraintEnd_toEndOf="@+id/protein_current"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/calorie_value"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/sixteen_dp"
+                    android:layout_marginEnd="@dimen/sixteen_dp"
+                    android:layout_marginBottom="@dimen/sixteen_dp"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/progressBar"
+                    app:layout_constraintEnd_toEndOf="@+id/progressBar"
+                    app:layout_constraintStart_toStartOf="@+id/progressBar"
+                    app:layout_constraintTop_toTopOf="@+id/progressBar" />
+
+                <TextView
+                    android:id="@+id/calorie_percent"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/eight_dp"
+                    android:layout_marginEnd="@dimen/eight_dp"
+                    android:gravity="center"
+                    android:textColor="@color/light_blue"
+                    app:layout_constraintEnd_toEndOf="@+id/calorie_value"
+                    app:layout_constraintStart_toStartOf="@+id/calorie_value"
+                    app:layout_constraintTop_toBottomOf="@+id/calorie_value" />
+
+                <ProgressBar
+                    android:id="@+id/protein_progress"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/eight_dp"
+                    android:layout_marginEnd="@dimen/forty_eight_dp"
+                    android:theme="@style/progressBars"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="@+id/protein_label"
+                    app:layout_constraintTop_toBottomOf="@+id/protein_label" />
+
+                <TextView
+                    android:id="@+id/protein_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/forty_eight_dp"
+                    android:layout_marginTop="@dimen/forty_eight_dp"
+                    android:text="@string/protein"
+                    android:textColor="@color/white"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/progressBar" />
+
+                <TextView
+                    android:id="@+id/carbs_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/forty_eight_dp"
+                    android:text="@string/carbs"
+                    android:textColor="@color/white"
+                    app:layout_constraintStart_toStartOf="@+id/protein_label"
+                    app:layout_constraintTop_toBottomOf="@+id/protein_progress" />
+
+                <TextView
+                    android:id="@+id/protein_remain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/grey"
+                    app:layout_constraintEnd_toEndOf="@+id/protein_progress"
+                    app:layout_constraintTop_toTopOf="@+id/protein_label" />
+
+                <TextView
+                    android:id="@+id/protein_current"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    app:layout_constraintEnd_toStartOf="@+id/protein_remain"
+                    app:layout_constraintTop_toTopOf="@+id/protein_remain" />
+
+                <TextView
+                    android:id="@+id/carbs_remain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/grey"
+                    app:layout_constraintEnd_toEndOf="@+id/carbs_progress"
+                    app:layout_constraintTop_toTopOf="@+id/carbs_label" />
+
+                <TextView
+                    android:id="@+id/carbs_current"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    app:layout_constraintEnd_toStartOf="@+id/carbs_remain"
+                    app:layout_constraintTop_toTopOf="@+id/carbs_remain" />
+
+                <TextView
+                    android:id="@+id/fat_remain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/grey"
+                    app:layout_constraintEnd_toEndOf="@+id/fat_progress"
+                    app:layout_constraintTop_toTopOf="@+id/fat_label" />
+
+                <TextView
+                    android:id="@+id/fat_current"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    app:layout_constraintEnd_toStartOf="@+id/fat_remain"
+                    app:layout_constraintTop_toTopOf="@+id/fat_remain" />
+
+                <TextView
+                    android:id="@+id/calorie_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/calories"
+                    android:textColor="@color/white"
+                    app:layout_constraintBottom_toBottomOf="@+id/progressBar"
+                    app:layout_constraintStart_toStartOf="@+id/protein_label"
+                    app:layout_constraintTop_toTopOf="@+id/progressBar" />
+
+                <TextView
+                    android:id="@+id/date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/sixteen_dp"
+                    android:layout_marginEnd="@dimen/sixteen_dp"
+                    android:textColor="@color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/constraintLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/side_nav_bar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/back_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/back"
+                    android:onClick="backImageHandler"
+                    android:padding="@dimen/sixteen_dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_arrow_back_white_24dp" />
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/circularCard"
+                    android:layout_width="@dimen/one_hundred_dp"
+                    android:layout_height="@dimen/one_hundred_dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/eight_dp"
+                    android:layout_marginTop="@dimen/sixteen_dp"
+                    android:layout_marginEnd="@dimen/eight_dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="@dimen/fifty_dp"
+                    app:cardElevation="@dimen/four_dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/back_image">
+
+                    <ImageView
+                        android:id="@+id/send_image"
+                        android:layout_width="@dimen/one_hundred_dp"
+                        android:layout_height="@dimen/one_hundred_dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="@string/profile_photo"
+                        app:srcCompat="@drawable/ic_person_black_24dp" />
+                </android.support.v7.widget.CardView>
+
+                <TextView
+                    android:id="@+id/user_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/sixteen_dp"
+                    android:layout_marginTop="@dimen/sixteen_dp"
+                    android:layout_marginEnd="@dimen/sixteen_dp"
+                    android:layout_marginBottom="@dimen/sixteen_dp"
+                    android:gravity="center"
+                    android:text="@string/author"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/circularCard" />
+            </android.support.constraint.ConstraintLayout>
+            <RadioGroup
+                android:id="@+id/radioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/one_dp"
+                android:background="@drawable/input_underline_blue"
+                android:checkedButton="@id/targetRadio"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
+
+                <RadioButton
+                    android:id="@+id/targetRadio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/radio_button_states"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:onClick="radioHandler"
+                    android:padding="@dimen/eight_dp"
+                    android:tag="@string/target"
+                    android:text="@string/target"
+                    android:textColor="@color/white" />
+
+                <RadioButton
+                    android:id="@+id/overviewRadio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/radio_button_states"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:onClick="radioHandler"
+                    android:padding="@dimen/eight_dp"
+                    android:tag="@string/overview"
+                    android:text="@string/overview"
+                    android:textColor="@color/white" />
+            </RadioGroup>
+
+            <RelativeLayout
+                android:id="@+id/loadingPanel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/constraintLayout">
+
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:indeterminate="true" />
+            </RelativeLayout>
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
+</android.support.constraint.ConstraintLayout>

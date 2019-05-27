@@ -1,6 +1,9 @@
 package com.example.macros;
 
-public class ProfileRecordSetter {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class ProfileRecordSetter implements Parcelable {
     private String protein;
     private String fat;
     private String carbs;
@@ -9,6 +12,26 @@ public class ProfileRecordSetter {
 
     public ProfileRecordSetter() {
     }
+
+    protected ProfileRecordSetter(Parcel in) {
+        protein = in.readString();
+        fat = in.readString();
+        carbs = in.readString();
+        date = in.readString();
+        note = in.readString();
+    }
+
+    public static final Creator<ProfileRecordSetter> CREATOR = new Creator<ProfileRecordSetter>() {
+        @Override
+        public ProfileRecordSetter createFromParcel(Parcel in) {
+            return new ProfileRecordSetter(in);
+        }
+
+        @Override
+        public ProfileRecordSetter[] newArray(int size) {
+            return new ProfileRecordSetter[size];
+        }
+    };
 
     public String getProtein() {
         return protein;
@@ -56,5 +79,19 @@ public class ProfileRecordSetter {
         this.carbs = carbs;
         this.date = date;
         this.note = note;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(protein);
+        parcel.writeString(fat);
+        parcel.writeString(carbs);
+        parcel.writeString(date);
+        parcel.writeString(note);
     }
 }

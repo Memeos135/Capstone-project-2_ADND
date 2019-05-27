@@ -2,8 +2,13 @@ package com.example.macros;
 
 import android.animation.Animator;
 import android.annotation.SuppressLint;
+import android.app.ActivityOptions;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,6 +27,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -73,6 +79,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
 
         if(savedInstanceState == null) {
             if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                ((RelativeLayout) findViewById(R.id.loadingPanel)).setVisibility(View.VISIBLE);
                 fetchSelfData();
                 readTodayMacros();
                 removeGradient();
@@ -311,6 +318,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
             checkIfUserIsFriend();
         }else{
             userStatus = "same user";
+            ((RelativeLayout) findViewById(R.id.loadingPanel)).setVisibility(View.GONE);
         }
     }
 
@@ -332,6 +340,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
                     if(flag[0]){
                         showSentRequest();
                         userStatus = "request sent";
+                        ((RelativeLayout) findViewById(R.id.loadingPanel)).setVisibility(View.GONE);
                     }else{
                         Log.i("XXX", "passed not in REQUESTS");
                         checkPending();
@@ -367,13 +376,16 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
                     if(pendingFlag[0]){
                         showPending();
                         userStatus = "pending";
+                        ((RelativeLayout) findViewById(R.id.loadingPanel)).setVisibility(View.GONE);
                     }else{
                         Log.i("XXX", "passed not in PENDING");
                         showAddFriend();
+                        ((RelativeLayout) findViewById(R.id.loadingPanel)).setVisibility(View.GONE);
                     }
                 }else{
                     Log.i("XXX", "passed not in PENDING");
                     showAddFriend();
+                    ((RelativeLayout) findViewById(R.id.loadingPanel)).setVisibility(View.GONE);
                 }
             }
 
@@ -490,6 +502,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
                         userStatus = "friend";
                         fetchNumber();
                         showFab();
+                        ((RelativeLayout) findViewById(R.id.loadingPanel)).setVisibility(View.GONE);
                     }
                 }else{
                     Log.i("XXX", "passed NOT FRIENDS");
@@ -544,7 +557,9 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
 
         if (id == R.id.profile) {
 
-            startActivity(new Intent(this, ProfileActivity.class));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                startActivity(new Intent(this, ProfileActivity.class), ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+            }
 
         } else if (id == R.id.signup) {
             // Testing default activity enter/exit animation
@@ -552,15 +567,21 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
 //                startActivity(new Intent(this, SignupActivity.class), ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
 //            }
 
-            startActivity(new Intent(this, SignupActivity.class));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                startActivity(new Intent(this, SignupActivity.class), ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+            }
 
         } else if (id == R.id.signin) {
 
-            startActivity(new Intent(this, LoginActivity.class));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                startActivity(new Intent(this, LoginActivity.class), ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+            }
 
         } else if (id == R.id.pending) {
 
-            Toast.makeText(this, "Pending", Toast.LENGTH_SHORT).show();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                startActivity(new Intent(this, PendingFriendsActivity.class), ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+            }
 
         } else if (id == R.id.signout) {
 
@@ -573,7 +594,9 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
 
         } else if (id == R.id.home) {
 
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                startActivity(new Intent(getApplicationContext(), MainActivity.class), ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+            }
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -592,10 +615,14 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
 
     public void chatFabHandler(View view){
         // launch whatsapp for a specific number based on the selected user - if user does not exist in contact list, invite through SMS
-        Uri uri = Uri.parse("smsto: " + number);
-        Intent i = new Intent(Intent.ACTION_SENDTO, uri);
-        i.setPackage("com.whatsapp");
-        startActivity(i);
+        if(appInstalledOrNot("com.whatsapp")) {
+            Uri uri = Uri.parse("smsto: " + number);
+            Intent i = new Intent(Intent.ACTION_SENDTO, uri);
+            i.setPackage("com.whatsapp");
+            startActivity(i);
+        }else{
+            Toast.makeText(this, "WhatsApp is not installed", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -660,6 +687,15 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         proteinRemain.setText(prot_perc+"%");
         carbsRemain.setText(carb_perc+"%");
         fatRemain.setText(fat_perc+"%");
+
+        ProgressBar protein = findViewById(R.id.protein_progress);
+        protein.setProgress(Integer.parseInt(prot_perc));
+
+        ProgressBar carbs = findViewById(R.id.carbs_progress);
+        carbs.setProgress(Integer.parseInt(carb_perc));
+
+        ProgressBar fat = findViewById(R.id.fat_progress);
+        fat.setProgress(Integer.parseInt(fat_perc));
     }
 
     @Override
@@ -685,5 +721,48 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         name.setText(R.string.user_name);
         email.setText(R.string.example_email);
         photo.setImageResource(R.drawable.ic_person_black_24dp);
+    }
+
+    private boolean appInstalledOrNot(String uri) {
+        PackageManager pm = getPackageManager();
+        boolean app_installed;
+        try {
+            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+            app_installed = true;
+        }
+        catch (PackageManager.NameNotFoundException e) {
+            app_installed = false;
+        }
+        return app_installed;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+            triggerWidget();
+            setupWidget();
+        }
+    }
+
+    public void setupWidget(){
+        Intent intent = new Intent(this, MacrosWidget.class);
+        intent.setAction("setBase");
+
+        int[] ids = AppWidgetManager.getInstance(getApplication())
+                .getAppWidgetIds(new ComponentName(getApplication(), MacrosWidget.class));
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        sendBroadcast(intent);
+    }
+
+    public void triggerWidget(){
+        Intent intent = new Intent(this, MacrosWidget.class);
+        intent.setAction("update");
+
+        int[] ids = AppWidgetManager.getInstance(getApplication())
+                .getAppWidgetIds(new ComponentName(getApplication(), MacrosWidget.class));
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        sendBroadcast(intent);
     }
 }

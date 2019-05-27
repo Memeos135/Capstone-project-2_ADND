@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -27,13 +26,11 @@ public class ProfileRecyclerAdapter extends RecyclerView.Adapter<ProfileRecycler
 
     @Override
     public void onBindViewHolder(MyViewHolder myViewHolder, int i) {
-//        myViewHolder.check.setVisibility(View.GONE);
         myViewHolder.fats.setText(recordList.get(i).getFat());
         myViewHolder.carbs.setText(recordList.get(i).getCarbs());
         myViewHolder.protein.setText(recordList.get(i).getProtein());
         myViewHolder.date.setText(recordList.get(i).getDate());
 
-        ProfileActivity.flag = false;
     }
 
     @Override
@@ -46,7 +43,6 @@ public class ProfileRecyclerAdapter extends RecyclerView.Adapter<ProfileRecycler
         TextView fats;
         TextView carbs;
         TextView date;
-        ImageView check;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -54,7 +50,6 @@ public class ProfileRecyclerAdapter extends RecyclerView.Adapter<ProfileRecycler
             carbs = itemView.findViewById(R.id.carbs_value);
             fats = itemView.findViewById(R.id.fat_value);
             date = itemView.findViewById(R.id.date);
-            check = itemView.findViewById(R.id.goal_check);
         }
     }
 }

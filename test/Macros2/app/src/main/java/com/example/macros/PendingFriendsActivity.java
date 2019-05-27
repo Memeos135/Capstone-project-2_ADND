@@ -1,7 +1,11 @@
 package com.example.macros;
 
+import android.app.ActivityOptions;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,6 +19,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +54,7 @@ public class PendingFriendsActivity extends AppCompatActivity implements Navigat
         navigationView.setNavigationItemSelectedListener(this);
 
         if(FirebaseAuth.getInstance().getCurrentUser()!=null){
+            ((RelativeLayout) findViewById(R.id.loadingPanel)).setVisibility(View.VISIBLE);
             setupRecycler();
         }
     }
@@ -74,6 +80,8 @@ public class PendingFriendsActivity extends AppCompatActivity implements Navigat
                         pendingList.add(dataSnapshot1.getValue().toString());
                     }
                     readUserRequestInfo(pendingList, recyclerView);
+                }else{
+                    ((RelativeLayout) findViewById(R.id.loadingPanel)).setVisibility(View.GONE);
                 }
             }
 
@@ -108,6 +116,9 @@ public class PendingFriendsActivity extends AppCompatActivity implements Navigat
                         // init adapter
                         PendingAdapter pendingAdapter = new PendingAdapter(context, infoList);
                         recyclerView.setAdapter(pendingAdapter);
+                        ((RelativeLayout) findViewById(R.id.loadingPanel)).setVisibility(View.GONE);
+                    }else{
+                        ((RelativeLayout) findViewById(R.id.loadingPanel)).setVisibility(View.GONE);
                     }
                 }
 
@@ -127,7 +138,9 @@ public class PendingFriendsActivity extends AppCompatActivity implements Navigat
 
         if (id == R.id.profile) {
 
-            startActivity(new Intent(this, ProfileActivity.class));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                startActivity(new Intent(this, ProfileActivity.class), ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+            }
 
         } else if (id == R.id.signup) {
             // Testing default activity enter/exit animation
@@ -135,15 +148,21 @@ public class PendingFriendsActivity extends AppCompatActivity implements Navigat
 //                startActivity(new Intent(this, SignupActivity.class), ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
 //            }
 
-            startActivity(new Intent(this, SignupActivity.class));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                startActivity(new Intent(this, SignupActivity.class), ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+            }
 
         } else if (id == R.id.signin) {
 
-            startActivity(new Intent(this, LoginActivity.class));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                startActivity(new Intent(this, LoginActivity.class), ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+            }
 
         } else if (id == R.id.pending) {
 
-            Toast.makeText(this, "Pending", Toast.LENGTH_SHORT).show();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                startActivity(new Intent(this, PendingFriendsActivity.class), ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+            }
 
         } else if (id == R.id.signout) {
 
@@ -156,7 +175,9 @@ public class PendingFriendsActivity extends AppCompatActivity implements Navigat
 
         } else if (id == R.id.home) {
 
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                startActivity(new Intent(getApplicationContext(), MainActivity.class), ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+            }
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -191,5 +212,35 @@ public class PendingFriendsActivity extends AppCompatActivity implements Navigat
 
     public void backImageHandler(View view){
         onBackPressed();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+            triggerWidget();
+            setupWidget();
+        }
+    }
+
+    public void setupWidget(){
+        Intent intent = new Intent(this, MacrosWidget.class);
+        intent.setAction("setBase");
+
+        int[] ids = AppWidgetManager.getInstance(getApplication())
+                .getAppWidgetIds(new ComponentName(getApplication(), MacrosWidget.class));
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        sendBroadcast(intent);
+    }
+
+    public void triggerWidget(){
+        Intent intent = new Intent(this, MacrosWidget.class);
+        intent.setAction("update");
+
+        int[] ids = AppWidgetManager.getInstance(getApplication())
+                .getAppWidgetIds(new ComponentName(getApplication(), MacrosWidget.class));
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        sendBroadcast(intent);
     }
 }

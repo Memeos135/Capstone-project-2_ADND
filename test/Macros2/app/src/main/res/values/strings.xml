@@ -70,5 +70,14 @@
     <string name="pending">Pending…</string>
     <string name="mob_num">Mobile Number</string>
     <string name="chat">Chat</string>
+    <string name="friend_photo">Friend profile photo</string>
+    <string name="back">Back arrow</string>
+    <string name="calendar">Calendar table</string>
+    <string name="friend_request_user_image">Friend request user image</string>
+    <string name="profile_photo">Profile image</string>
+    <string name="user_image">User profile image</string>
+    <string name="remove_note">Remove the note</string>
+    <string name="search_image">Search image</string>
+    <string name="gradient">Gradient foreground image</string>
 
 </resources>

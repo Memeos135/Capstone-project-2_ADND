@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/eight_dp"
+    android:layout_marginEnd="@dimen/eight_dp"
+    android:layout_marginBottom="@dimen/eight_dp"
+    app:cardBackgroundColor="@color/card_grey"
+    app:cardCornerRadius="@dimen/four_dp"
+    app:contentPaddingBottom="@dimen/eight_dp"
+    app:contentPaddingTop="@dimen/eight_dp">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/circularCard"
+            android:layout_width="@dimen/eighty_dp"
+            android:layout_height="@dimen/eighty_dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/eight_dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="@dimen/forty_dp"
+            app:cardElevation="@dimen/four_dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/send_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:contentDescription="@string/friend_photo"
+                app:srcCompat="@drawable/ic_person_black_24dp" />
+
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:id="@+id/dump"
+            android:layout_width="@dimen/one_dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/sixteen_dp"
+            android:background="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/circularCard"
+            app:layout_constraintStart_toEndOf="@+id/circularCard"
+            app:layout_constraintTop_toTopOf="@+id/circularCard" />
+
+        <TextView
+            android:id="@+id/friend_name"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/forty_dp"
+            android:layout_marginStart="@dimen/sixteen_dp"
+            android:layout_marginEnd="@dimen/eight_dp"
+            android:gravity="center_vertical"
+            android:text="@string/author"
+            android:textColor="@color/light_blue"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/dump"
+            app:layout_constraintEnd_toStartOf="@+id/drop_down_list"
+            app:layout_constraintStart_toEndOf="@+id/dump"
+            app:layout_constraintTop_toTopOf="@+id/dump" />
+
+        <ImageView
+            android:id="@+id/drop_down_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/eight_dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/friend_name"
+            app:srcCompat="@drawable/ic_arrow_drop_down_white_24dp" />
+
+        <LinearLayout
+            android:id="@+id/spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/eight_dp"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/drop_down_list"
+            app:layout_constraintTop_toBottomOf="@+id/friend_name">
+
+            <TextView
+                android:id="@+id/remove_friend"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/eight_dp"
+                android:text="@string/remove_friend" />
+
+            <TextView
+                android:id="@+id/chat_friend"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/eight_dp"
+                android:text="@string/chat" />
+
+        </LinearLayout>
+
+    </android.support.constraint.ConstraintLayout>
+</android.support.v7.widget.CardView>

@@ -1,6 +1,10 @@
 package com.example.macros;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.app.Dialog;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -16,7 +20,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -67,7 +70,9 @@ public class MainActivity extends AppCompatActivity
         fab_friends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(context, FriendsListActivity.class));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    startActivity(new Intent(context, FriendsListActivity.class), ActivityOptions.makeSceneTransitionAnimation((Activity) context).toBundle());
+                }
             }
         });
 
@@ -291,23 +296,27 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.profile) {
 
-            startActivity(new Intent(this, ProfileActivity.class));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                startActivity(new Intent(this, ProfileActivity.class), ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+            }
 
         } else if (id == R.id.signup) {
-            // Testing default activity enter/exit animation
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//                startActivity(new Intent(this, SignupActivity.class), ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
-//            }
 
-            startActivity(new Intent(this, SignupActivity.class));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                startActivity(new Intent(this, SignupActivity.class), ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+            }
 
         } else if (id == R.id.signin) {
 
-            startActivity(new Intent(this, LoginActivity.class));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                startActivity(new Intent(this, LoginActivity.class), ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+            }
 
         } else if (id == R.id.pending) {
 
-            startActivity(new Intent(context, PendingFriendsActivity.class));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                startActivity(new Intent(context, PendingFriendsActivity.class), ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+            }
 
         } else if (id == R.id.signout) {
 
@@ -320,7 +329,9 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.home) {
 
-            startActivity(new Intent(context, MainActivity.class));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                startActivity(new Intent(context, MainActivity.class), ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+            }
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -358,5 +369,35 @@ public class MainActivity extends AppCompatActivity
         name.setText(R.string.user_name);
         email.setText(R.string.example_email);
         photo.setImageResource(R.drawable.ic_person_black_24dp);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+            triggerWidget();
+            setupWidget();
+        }
+    }
+
+    public void setupWidget(){
+        Intent intent = new Intent(this, MacrosWidget.class);
+        intent.setAction("setBase");
+
+        int[] ids = AppWidgetManager.getInstance(getApplication())
+                .getAppWidgetIds(new ComponentName(getApplication(), MacrosWidget.class));
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        sendBroadcast(intent);
+    }
+
+    public void triggerWidget(){
+        Intent intent = new Intent(this, MacrosWidget.class);
+        intent.setAction("update");
+
+        int[] ids = AppWidgetManager.getInstance(getApplication())
+                .getAppWidgetIds(new ComponentName(getApplication(), MacrosWidget.class));
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        sendBroadcast(intent);
     }
 }

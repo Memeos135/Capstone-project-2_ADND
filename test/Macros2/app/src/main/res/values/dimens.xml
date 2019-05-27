@@ -35,6 +35,8 @@
     <dimen name="one">1</dimen>
     <dimen name="two">2</dimen>
     <dimen name="two_hundred_twenty_dp">220dp</dimen>
+    <dimen name="three_hundred_twenty_dp">320dp</dimen>
+    <dimen name="one_hundred_eighty_dp">180dp</dimen>
 
     <!--
 Refer to App Widget Documentation for margin information

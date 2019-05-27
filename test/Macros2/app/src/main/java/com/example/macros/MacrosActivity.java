@@ -1,6 +1,9 @@
 package com.example.macros;
 
+import android.app.ActivityOptions;
 import android.app.Dialog;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -24,6 +27,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -93,6 +97,8 @@ public class MacrosActivity extends AppCompatActivity implements NavigationView.
             if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                 noteList = new ArrayList<>();
 
+                ((RelativeLayout) findViewById(R.id.loadingPanel)).setVisibility(View.VISIBLE);
+
                 fetchUserBrief();
                 setupDate();
                 setupNotesRecycler();
@@ -161,6 +167,8 @@ public class MacrosActivity extends AppCompatActivity implements NavigationView.
 
         calorie_max = String.valueOf(max_calories);
         calorie_percents = String.valueOf((int)percentage);
+
+        ((RelativeLayout) findViewById(R.id.loadingPanel)).setVisibility(View.GONE);
 
     }
 
@@ -343,23 +351,27 @@ public class MacrosActivity extends AppCompatActivity implements NavigationView.
 
         if (id == R.id.profile) {
 
-            startActivity(new Intent(this, ProfileActivity.class));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                startActivity(new Intent(this, ProfileActivity.class), ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+            }
 
         } else if (id == R.id.signup) {
-            // Testing default activity enter/exit animation
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//                startActivity(new Intent(this, SignupActivity.class), ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
-//            }
 
-            startActivity(new Intent(this, SignupActivity.class));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                startActivity(new Intent(this, SignupActivity.class), ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+            }
 
         } else if (id == R.id.signin) {
 
-            startActivity(new Intent(this, LoginActivity.class));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                startActivity(new Intent(this, LoginActivity.class), ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+            }
 
         } else if (id == R.id.pending) {
 
-            Toast.makeText(this, "Pending", Toast.LENGTH_SHORT).show();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                startActivity(new Intent(this, PendingFriendsActivity.class), ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+            }
 
         } else if (id == R.id.signout) {
 
@@ -372,7 +384,9 @@ public class MacrosActivity extends AppCompatActivity implements NavigationView.
 
         } else if (id == R.id.home) {
 
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                startActivity(new Intent(getApplicationContext(), MainActivity.class), ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+            }
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -836,5 +850,35 @@ public class MacrosActivity extends AppCompatActivity implements NavigationView.
         name.setText(R.string.user_name);
         email.setText(R.string.example_email);
         photo.setImageResource(R.drawable.ic_person_black_24dp);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+            triggerWidget();
+            setupWidget();
+        }
+    }
+
+    public void setupWidget(){
+        Intent intent = new Intent(this, MacrosWidget.class);
+        intent.setAction("setBase");
+
+        int[] ids = AppWidgetManager.getInstance(getApplication())
+                .getAppWidgetIds(new ComponentName(getApplication(), MacrosWidget.class));
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        sendBroadcast(intent);
+    }
+
+    public void triggerWidget(){
+        Intent intent = new Intent(this, MacrosWidget.class);
+        intent.setAction("update");
+
+        int[] ids = AppWidgetManager.getInstance(getApplication())
+                .getAppWidgetIds(new ComponentName(getApplication(), MacrosWidget.class));
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        sendBroadcast(intent);
     }
 }
