@@ -228,6 +228,8 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
 
                     calculateCalories(carbMax, fatMax, proteinMax, proteinText.getText().toString(), carbsText.getText().toString(), fatText.getText().toString());
 
+                }else{
+                    ((RelativeLayout) findViewById(R.id.loadingPanel)).setVisibility(View.GONE);
                 }
             }
 

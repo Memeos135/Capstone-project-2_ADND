@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
         debug {
-            storeFile file('C:\\Users\\pc\\Desktop\\test\\Capstone-project-2_ADND\\test\\Macros2\\keystore.jks')
+            storeFile file("$rootDir/keystore.jks")
             storePassword 'password'
             keyAlias = 'udacity'
             keyPassword 'password'

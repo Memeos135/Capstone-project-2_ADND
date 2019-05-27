@@ -228,6 +228,7 @@ public class SignupActivity extends AppCompatActivity implements NavigationView.
 
             // do firebase
             buildUserRecord();
+            ((RelativeLayout) findViewById(R.id.loadingPanel)).setVisibility(View.VISIBLE);
         }
     }
 
@@ -241,6 +242,7 @@ public class SignupActivity extends AppCompatActivity implements NavigationView.
                     addImageStorage(firebaseUser.getUid());
                 }else{
                     Toast.makeText(SignupActivity.this, "Registration Failed", Toast.LENGTH_SHORT).show();
+                    ((RelativeLayout) findViewById(R.id.loadingPanel)).setVisibility(View.GONE);
                 }
             }
         });
@@ -260,6 +262,8 @@ public class SignupActivity extends AppCompatActivity implements NavigationView.
                             Uri downloadUri = task.getResult();
                             // create a user record in the database
                             storeUserRecord(uID, downloadUri);
+                        }else{
+                            ((RelativeLayout) findViewById(R.id.loadingPanel)).setVisibility(View.GONE);
                         }
                     }
                 });
@@ -279,6 +283,7 @@ public class SignupActivity extends AppCompatActivity implements NavigationView.
                 databaseReference.push().setValue(new SearchNode(uID, fName)).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
+                        ((RelativeLayout) findViewById(R.id.loadingPanel)).setVisibility(View.GONE);
                         startActivity(new Intent(getApplicationContext(), LoginActivity.class)
                                 .putExtra("username", email)
                                 .putExtra("password", password));
@@ -288,7 +293,7 @@ public class SignupActivity extends AppCompatActivity implements NavigationView.
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-
+                ((RelativeLayout) findViewById(R.id.loadingPanel)).setVisibility(View.GONE);
             }
         });
     }

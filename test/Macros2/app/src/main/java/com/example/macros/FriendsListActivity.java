@@ -158,6 +158,8 @@ public class FriendsListActivity extends AppCompatActivity implements Navigation
                         ids.add(dataSnapshot1.getValue().toString());
                     }
                     getTheActualData(friendInfos, ids, recyclerView);
+                }else{
+                    ((RelativeLayout) findViewById(R.id.loadingPanel)).setVisibility(View.GONE);
                 }
             }
 
@@ -189,6 +191,8 @@ public class FriendsListActivity extends AppCompatActivity implements Navigation
                         }
                         friendListRecyclerAdapter = new FriendListRecyclerAdapter(context, friendInfos);
                         recyclerView.setAdapter(friendListRecyclerAdapter);
+                        ((RelativeLayout) findViewById(R.id.loadingPanel)).setVisibility(View.GONE);
+                    }else{
                         ((RelativeLayout) findViewById(R.id.loadingPanel)).setVisibility(View.GONE);
                     }
                 }

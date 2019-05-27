@@ -233,6 +233,8 @@ public class MacrosActivity extends AppCompatActivity implements NavigationView.
                     }
                     updateRemaining(protein_label.getText().toString(), carbs_label.getText().toString(), fat_label.getText().toString()
                             , protein, carbs, fat);
+                }else{
+                    ((RelativeLayout) findViewById(R.id.loadingPanel)).setVisibility(View.GONE);
                 }
             }
 
